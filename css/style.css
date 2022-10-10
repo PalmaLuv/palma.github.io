@@ -3,6 +3,7 @@
 body {
   margin: 0 auto;
   padding: 0;
+  max-width: 1170px;
 
   color : white;
   background-color: #131313;
@@ -14,7 +15,8 @@ ul , li {
 }
 
 .header {
-  background: url(../img/wallpaper.gif) no-repeat center top / cover;
+  /*background: url(../img/wallpaper.gif) no-repeat center top / cover;*/
+  max-width: 1170px;
   padding-top: 15px;
   padding-bottom: 500px; /*400 px*/
 }
@@ -25,6 +27,18 @@ header a {
 
 header a:hover {
   color: #cccccc;
+}
+
+header .video {
+  position: absolute;
+	top: 0;
+	left: 0;
+	object-fit: cover;
+  width: 100%;
+	height: auto;
+  max-height: 581px;
+	pointer-events: none;
+  overflow: hidden;
 }
 
 .menu {
@@ -47,12 +61,15 @@ header a:hover {
 }
 
 .nav {
+  z-index: 1;
   display: flex;
   margin-top: 15px;
 }
 
 .section {
   padding-top: 15px;
+  z-index: 1;
+  background-color: #131313;
 }
 
 .position-center {
