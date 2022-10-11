@@ -1,14 +1,17 @@
 @media screen and (max-width: 480px) {
     body {
         width: auto;
+        max-width: auto;
     }
     
     .header {
         width: auto;
+        max-width: auto;
     }
 
     header .video {
         width: auto;
+        max-width: auto;
     }
 
     a {
