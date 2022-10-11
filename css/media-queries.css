@@ -6,14 +6,14 @@
         max-width: 100%;
         width: auto;
     }
-    
-    .header {
-        max-width: 100%;
-        width: auto;
-    }
 
     .container {
         width: auto;
+    }
+
+    .header {
+        width: auto;
+        max-width: 100%;
     }
 
     header .video {
@@ -29,9 +29,11 @@
 }
 
 
-@media (min-width: 490px) and (max-width: 1024px) {
+@media (max-width: 1024px) and (min-width: 480px){
     body {
+        
         width: auto;
+        max-width: 100%;
     }
     
     .container {
@@ -40,13 +42,14 @@
 
     .header {
         width: auto;
+        max-width: 100%;
     }
 
     header .video {
+        height: 581px;
         width: auto;
+        max-width: 100%;
+        object-fit: cover;
     }
 
-    a {
-        font-size: 50px;
-    }
 }
