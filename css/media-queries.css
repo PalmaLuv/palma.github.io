@@ -2,13 +2,13 @@
     body {
         margin: 0 auto;
         padding: 0;
-
-        max-width: 480px;
+        overflow: hidden;
+        max-width: 100%;
         width: auto;
     }
     
     .header {
-        max-width: 480px;
+        max-width: 100%;
         width: auto;
     }
 
@@ -17,7 +17,10 @@
     }
 
     header .video {
+        height: 581px;
         width: auto;
+        max-width: 100%;
+        object-fit: cover;
     }
 
     a {
@@ -26,7 +29,7 @@
 }
 
 
-@media (min-width: 480px) and (max-width: 1024px) {
+@media (min-width: 490px) and (max-width: 1024px) {
     body {
         width: auto;
     }
