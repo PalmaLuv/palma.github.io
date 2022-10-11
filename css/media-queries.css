@@ -1,14 +1,37 @@
 @media screen and (max-width: 480px) {
     body {
-        max-width: auto;
+        width: auto;
     }
     
     .header {
-        max-width: auto;
+        width: auto;
     }
 
     header .video {
-        width: 100%;
+        width: auto;
+    }
+
+    a {
+        font-size: 50px;
+    }
+}
+
+
+@media (min-width: 480px) and (max-width: 1024px) {
+    body {
+        width: auto;
+    }
+    
+    .container {
+        width: auto;
+    }
+
+    .header {
+        width: auto;
+    }
+
+    header .video {
+        width: auto;
     }
 
     a {
