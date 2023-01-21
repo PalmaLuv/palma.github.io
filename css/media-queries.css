@@ -26,14 +26,14 @@
     a {
         font-size: 50px;
     }
+
+    .image_box {
+        width: 70%;
+    }
 }
 
 
-<<<<<<< HEAD
 @media (max-width: 1024px) and (min-width: 480px){
-=======
-@media (max-width: 1024px) {
->>>>>>> 60fccc25551fc7df341810a7e63375533750841c
     body {
         
         width: auto;
@@ -55,5 +55,6 @@
         max-width: 100%;
         object-fit: cover;
     }
+
 
 }

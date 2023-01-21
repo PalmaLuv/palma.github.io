@@ -153,3 +153,66 @@ header .video {
 .loaded .preloader {
   display: none;
 }
+
+._box_conteiner {
+
+  background: #1d1d1d;
+  border: solid 10px #1d1d1d;
+
+  margin-top: 15px;
+}
+
+@media (min-width: 1024px)
+{
+  ._box_conteiner {
+    display: flex;
+  }
+
+  @media (orientation: landscape) {
+    ._box_conteiner{
+     flex-direction: row;
+    }
+ }
+ 
+ @media (orientation: portrait) {
+     ._box_conteiner{
+       flex-direction: column;
+     }
+ }
+}
+
+.image_box {
+  width: 500px;
+}
+
+._button_box {
+  margin-left: 40px;
+  width: 150px;
+  height: 35px;
+  font-size: 14px;
+
+  color: white;
+  background-color: #3f3f3f;
+  border-color: transparent;
+}
+
+._button_box:hover {
+  background: #272727;
+  cursor: pointer;
+}
+
+div.container_footer {
+  margin-top: 55px;
+  margin-bottom: 100px;
+
+  position: relative;
+}
+
+div.container_footer div._footer {
+  position: absolute;
+  
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  bottom: 10px;
+}
