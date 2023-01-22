@@ -2,8 +2,9 @@
     body {
         margin: 0 auto;
         padding: 0;
-        overflow: hidden;
-        max-width: 100%;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        min-height: 100%;
         width: auto;
     }
 
@@ -13,7 +14,7 @@
 
     .header {
         width: auto;
-        max-width: 100%;
+        
     }
 
     header .video {
@@ -38,6 +39,9 @@
         
         width: auto;
         max-width: 100%;
+
+        overflow-y: scroll;
+        overflow-x: hidden;
     }
     
     .container {
