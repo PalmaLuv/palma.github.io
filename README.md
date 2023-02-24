@@ -1,1 +1,1 @@
-Link: [palma.pp.ua](http://palma.pp.ua/) 
+Link: [palmaluv.live](palmaluv.live) 
