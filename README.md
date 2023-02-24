@@ -1,1 +1,1 @@
-Link: [palmaluv.live](palmaluv.live) 
+Link: [palmaluv.live](https://palmaluv.live/) 
