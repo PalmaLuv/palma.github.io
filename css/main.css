@@ -589,14 +589,12 @@ html, body
 }
 
 .loaded_hiding .preloader {
-	transition: opacity 0.3s ease-in-out;
-	opacity: 1;
+	transition: 0.3ms opasity;
+	opacity: 0;
   }
   
   .loaded .preloader {
 	display: none;
-	transition: opacity 0.3s ease-in-out;
-	opacity: 0;
   }
 
   .preloader__item:last-child {

@@ -14,17 +14,8 @@ window.onload = function () {
   if (headerWrapper.complete) {
     headerWrapper.dispatchEvent(new Event('load'));
   }
-  
-  var loadedElement = document.querySelector('.loaded');
-  loadedElement.addEventListener('transitionend', function() {
-    loadedElement.classList.remove('loaded');
-  });
 }
 
-var loadedElement = document.querySelector('.loaded');
-loadedElement.addEventListener('transitionend', function() {
-  loadedElement.classList.remove('loaded');
-});
 
 /*window.onload = function () {
   document.body.classList.add('loaded_hiding');
