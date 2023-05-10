@@ -5,12 +5,14 @@ window.onload = function () {
   }, 500);
 
   var headerWrapper = document.querySelector('.header__wrapper');
-  headerWrapper.addEventListener('load', function () {
-    window.clearTimeout(timeoutId);
-  });
-
   if (headerWrapper.complete) {
-    headerWrapper.dispatchEvent(new Event('load'));
+    window.clearTimeout(timeoutId);
+    document.body.classList.add('loaded_hiding');
+  } else {
+    headerWrapper.addEventListener('load', function () {
+      window.clearTimeout(timeoutId);
+      document.body.classList.add('loaded_hiding');
+    });
   }
 }
 
