@@ -588,8 +588,9 @@ html, body
     }
 }
 
+
 .loaded_hiding .preloader {
-	transition: 0.3ms opasity;
+	transition: opacity 0.5s ease-out;
 	opacity: 0;
   }
   

@@ -1,16 +1,14 @@
 window.onload = function () {
   var timeoutId = window.setTimeout(function () {
-    document.body.classList.add('loaded');
-    document.body.classList.remove('loaded_hiding');
+    document.body.querySelector('loaded');
+    document.body.classList.add('loaded_hiding');
   }, 500);
-  
+
   var headerWrapper = document.querySelector('.header__wrapper');
   headerWrapper.addEventListener('load', function () {
     window.clearTimeout(timeoutId);
-    document.body.classList.add('loaded');
-    document.body.classList.remove('loaded_hiding');
   });
-  
+
   if (headerWrapper.complete) {
     headerWrapper.dispatchEvent(new Event('load'));
   }
