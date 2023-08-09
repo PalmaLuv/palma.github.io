@@ -604,8 +604,8 @@ img.overlay__list__svg {
 	  }
 
 	ul.overlay__list { 
-		column-gap: 5px;
-		row-gap: 10px;
+		column-gap: 10px;
+		row-gap: 0;
 	
 		margin: 10px 0;
 		font-size: 16px;
