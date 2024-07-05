@@ -1,6 +1,6 @@
 ## Software Developer Dotnet Porfolio.
 
-[![uk-UA](https://img.shields.io/badge/lang-uk--UA-blue)](README.uk-UA.md)
+[![uk-UA](https://img.shields.io/badge/lang-en-blue)](README.md)
 
 
 ### Дивіться сайт :
