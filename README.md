@@ -1,5 +1,15 @@
-<h2 align="center">site Palmaluv.live</h2>
+## gh-pages
 
-Link: [palmaluv.live](https://palmaluv.live/) 
+Link web-site : https://palmaluv.github.io/palma.github.io/
 
-This site was made for his needs and placing it as his personal portfolio.
+___
+
+### About page : 
+
+#### White mode : 
+
+![alt text](./.github/image/image-white.png)
+
+#### Dark mode :
+
+![alt text](./.github/image/image-dark.png)
