@@ -46,7 +46,7 @@
         <div class="header__wrapper">
             <h1 class="header__title">
                 <strong>Hey my name is <scan class="text-gradient">Alexander</scan></strong><br>
-                i C# and .NET Developer.
+                i .NET Software Developer.
             </h1>
             <div class="header__text">
                 <p><em style="color: gray;">"with passion for learning and creating."</em></p>
@@ -54,134 +54,78 @@
         </div>
     </header>
 
-    <main class="section">
-        <div class="container">
-                <div class="overlay">
-                    <div>
-                        <h1 class="overlay__title">
-                            <scan class="text-gradient">
-                                About Me
-                            </scan>
-                        </h1>
-                        <div class="overlay__container">
-                            <div class="container" style="padding: 0;">
-                                
-                                <p class="overlay__description">
-                                    I'm Palma, and my name is Alexander. 
-                                    I got acquainted with information technologies a long time ago, but really deepened a couple of years ago. 
-                                    I really like what I do, and I want to keep working, developing, and connect my life with it.
-                                </p>
-                                <div class="overlay__buttons" style="margin-right: auto;">
-                                    <button class="overlay__button overlay__button--transparent">
-                                        <a href="https://github.com/PalmaLuv" target="_blank">
-                                            My GitHub
-                                        </a>
-                                    </button>
-                                </div>
+    <main class="section" id="main_bg">
+        <!-- BG generate-->
+        <div id="particles-background" class="vertical-centered-box"></div>
+        <div id="particles-foreground" class="vertical-centered-box"></div>
+        <!-- Content -->
+        <section class="container center__particles">
+            <div class="overlay">
+                <div>
+                    <h1 class="overlay__title">
+                        <scan class="text-gradient">
+                            About Me
+                        </scan>
+                    </h1>
+                    <div class="overlay__container">
+                        <div class="container" style="padding: 0;">
+                            <p class="overlay__description" id="aboutMe">
+                                Hi! My name is Oleksandr, also known as Palma. I am a .NET Software Developer with over 5 years of experience and a strong background in modern technologies.
+                                <br><br>
+                                In my professional work, I focus on building efficient, multifunctional, and reliable applications. 
+                                In my free time, I dedicate myself to personal projects, which allow me to develop a creative approach and deepen my knowledge in software development.
+                                <br><br>
+                                I have already successfully implemented several interesting projects.
+                                <br><br>
+                                I am always looking for new challenges and open to collaboration! 
+                                If you have exciting projects or proposals, feel free to use the links at the bottom of this page to get in touch with me.
+                            </p>
+                            <div class="overlay__buttons" style="margin-right: auto;">
+                                <button class="overlay__button overlay__button--transparent">
+                                    <a href="https://github.com/PalmaLuv" target="_blank">
+                                        My GitHub
+                                    </a>
+                                </button>
                             </div>
-                            <img class="avatar" src="https://avatars.githubusercontent.com/u/84909252?v=4"/>
                         </div>
-                        <h1 class="overlay__title">
-                            <scan class="text-gradient">
-                                Skills
-                            </scan>
-                        </h1>
-
-                        <ul class="overlay__list">
-                            <li>
-                                <div class="container" style="display: flex;">
-                                    <img src="img/svg/c.svg" class="overlay__list__svg">
-                                    C
-                                </div>
-                            </li>
-                            <li>
-                                <div class="container" style="display: flex;">
-                                    <img src="img/svg/cplusplus.svg" class="overlay__list__svg">
-                                    C++
-                                </div>
-                            </li>
-                            <li>
-                                <div class="container" style="display: flex;">    
-                                    <img src="img/svg/csharp.svg" class="overlay__list__svg">
-                                    C#
-                                </div>
-                            </li>
-                            <li>
-                                <div class="container" style="display: flex;">
-                                    <img src="img/svg/python.svg" class="overlay__list__svg">
-                                    Python
-                                </div>
-                            </li>
-                            <li>
-                                <div class="container" style="display: flex;">
-                                    <img src="img/svg/dotnet.svg" class="overlay__list__svg">
-                                    .NET
-                                </div>
-                            </li>
-                            <li>
-                                <div class="container" style="display: flex;">
-                                    <img src="img/svg/dotnet.svg" class="overlay__list__svg">
-                                    ASP.NET
-                                </div>
-                            </li>
-                            <li>
-                                <div class="container" style="display: flex;">
-                                    <img src="img/svg/postgresql.svg" class="overlay__list__svg">
-                                    PostgreSQL
-                                </div>
-                            </li>
-                            <li>
-                                <div class="container" style="display: flex;">
-                                    <img src="img/svg/microsoftaccess.svg" class="overlay__list__svg">
-                                    Microsoft Access
-                                </div>
-                            </li>
-                            <li>
-                                <div class="container" style="display: flex;">
-                                    <img src="img/svg/docker.svg" class="overlay__list__svg">
-                                    Docker
-                                </div>
-                            </li>
-                            <li>
-                                <div class="container" style="display: flex;">
-                                    <img src="img/svg/javascript.svg" class="overlay__list__svg">
-                                    JavaScript
-                                </div>
-                            </li>
-                            <li>
-                                <div class="container" style="display: flex;">
-                                    <img src="img/svg/git.svg" class="overlay__list__svg">
-                                    Git
-                                </div>
-                            </li>
-                            <li>
-                                <div class="container" style="display: flex;">
-                                    <img src="img/svg/linux.svg" class="overlay__list__svg">
-                                    Linux
-                                </div>
-                            </li>
-                            <li>
-                                <div class="container" style="display: flex;">
-                                    <img src="img/svg/lua.svg" class="overlay__list__svg">
-                                    Lua
-                                </div>
-                            </li>
-                        </ul>
+                        <img class="avatar" src="https://avatars.githubusercontent.com/u/84909252?v=4"/>
                     </div>
+                    <h1 class="overlay__title--skills">
+                        <scan class="text-gradient">
+                            Skills
+                        </scan>
+                    </h1>
+                    <ul class="overlay__list" id="hard__skill-list">
+                        <!-- Auto generation --> 
+                    </ul>
                 </div>
-                <!--<li class="content-list__item">
-                    <h2 class="title-2">About Me</h2>
-                    <p>I'm Palma. I am young programmer who has been studying IT for more than 2 years.<br>
-                        Durimg this time, a lot of things have been studied, and I would like to know more.<br>Mush more than I know now.</p>
-                </li>
-                <li class="content-list__item">
-                    <h2 class="title-3">Skills</h2>
-                    <p>Throughout my years of study I have tried to learn as many programming languages as possible, but I consider <em>C#</em> to be the main language</p>
-                </li>
-                <li class="content-list__item">
-                    <p>My projects can be viewed <em><a href="./projects.html" title="click me">here</a></em></p>
-                </li>-->
-        </div>
+            </div>
+        </section>
+
+        <section class="container center__particles container__next">
+            <div class="overlay">
+                <div>
+                    <h1 class="overlay__title">
+                        <scan class="text-gradient">
+                            Work experience
+                        </scan>
+                    </h1>
+                    <div class="overlay__container">
+                        <div class="container"> 
+                            <ul class="work_timeline">
+                                <li class="timeline_event">
+                                    <div class="event__container">
+                                        <h3>.Net software developer</h3>
+                                        <span class="year_information">September 2020 - June 2024</span>
+                                    </div>
+                                    <span class="company_information">DSEA-State Engineering Academy.</span>
+                                    <p>Test text</p>
+                                </li>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+        </section>
     </main>
 
     <footer class="footer">
@@ -227,6 +171,8 @@
     </footer>
 
     <script src="./js/script.js"></script>
+    <script src="./js/bg_screen.js"></script>
+    <script src="./js/auto-update/auto-update-hardskill.js"></script>
 
 </body>
 </html>
