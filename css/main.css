@@ -124,9 +124,12 @@ html, body
 	padding-top: 60px;
 }
 
+.pg-canvas { 
+	height: 100%;
+}
+
 .work_timeline { 
 	padding: 20px 20px 15px 40px;
-	margin-bottom: 20px;
 	position: relative;
 
 	border-left: var(--skill-list-color) 2px solid;

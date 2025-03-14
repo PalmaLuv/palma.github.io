@@ -4,9 +4,8 @@ async function fetchInJson(url) {
 }
 
 async function UpdateHardSkill() {
-    const skillsList = await fetchInJson(
-        (await fetchInJson("./.github/file/list-file.json")).git_hardskill
-    )
+    const gitUrl = "https://gist.githubusercontent.com/PalmaLuv/a563f27ec9dbb989b1872832acc8401c/raw/portfolio_hardskill-list.json"
+    const skillsList = await fetchInJson(gitUrl)
 
     const hardSkillContainer = document.getElementById("hard__skill-list");
     (skillsList.skills).forEach(element => { 
