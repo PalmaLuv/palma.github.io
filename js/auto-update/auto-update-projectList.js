@@ -3,6 +3,29 @@ async function fetchProjects(username) {
     return await response.json(); 
 }
 
+async function getCachedImage(url, cacheKey, maxAgeMS = 7*24*60*60*1000) { 
+    const cache = localStorage.getItem(cacheKey);
+    if (cache) { 
+        try { 
+            const { image, timestamp } = JSON.parse(cache);
+            if (Date.now() - timestamp < maxAgeMS) { 
+                return image;
+            }
+        } catch(e) {}
+    }
+
+    const response = await fetch(url); 
+    const blob = await response.blob(); 
+    return await new Promise(resolve => {
+        const reader = new FileReader();
+        localStorage.setImage(cacheKey, JSON.stringify({
+            image: URL.reader.result,
+            timestamp: Date.now()
+        }));
+        reader.readAsDataURL(blob);
+    })
+} 
+
 async function fetchProject(username, repoName) {
     try {
         const response = await fetch(`https://api.github.com/repos/${username}/${repoName}`);
@@ -30,9 +53,16 @@ async function updatePortfolio() {
         { 
             console.log(element);
 
-            const imageUrl = element.urlIMG == "NONE" ?
-                `https://opengraph.githubassets.com/1/${element.username}/${element.name}` 
-              : element.urlIMG;
+            let imgSrc;
+            if (element.urlIMG == "NONE") {
+                // Этот генерируем через OpenGraph и кэшируем
+                const imageUrl = `https://opengraph.githubassets.com/1/${element.username}/${element.name}`;
+                const cacheKey = `projectImage_${element.username}_${element.name}`;
+                imgSrc = await getCachedImage(imageUrl, cacheKey);
+            } else {
+                // Прямой адрес картинки (assets) — не кэшируем через fetch!
+                imgSrc = element.urlIMG;
+            }
 
             const repoElement = await fetchProject(
                 element.username,
@@ -43,7 +73,7 @@ async function updatePortfolio() {
             projectElement.className = "project"; 
             projectElement.innerHTML = `
                 <a href="${repoElement.html_url}"> 
-                    <img class="project__img" src="${imageUrl}">
+                    <img class="project__img" src="${imgSrc}">
                     <div class="project__title-container">
                       <h3 class="project__title">${repoElement.name}</h3>
                       <div class="project__star__inf"> 
