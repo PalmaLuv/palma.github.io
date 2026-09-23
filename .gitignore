@@ -1,0 +1,15 @@
+# local tooling for the editor / assistant, not part of the site
+.claude/
+
+# OS and editor noise
+Thumbs.db
+.DS_Store
+desktop.ini
+*.swp
+
+# python
+__pycache__/
+*.pyc
+
+# rendered by the workflow on every deploy; binary and never identical twice
+src/cv-*.pdf
