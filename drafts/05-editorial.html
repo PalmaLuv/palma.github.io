@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="uk" data-lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Олександр Коляса — .NET і T-SQL</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Piazzolla:opsz,wght@8..30,500;8..30,600&family=Commissioner:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FFFFFF; --ink:#141414; --ink-2:#5A5A5A; --ink-3:#8C8C8C; --rule:#D9D9D9; --river:#2B5C8A; --river-soft:#E3ECF5;
+  --serif:'Piazzolla',Georgia,serif; --sans:'Commissioner',system-ui,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root{
+  --paper:#111315; --ink:#ECECEA; --ink-2:#ABABA8; --ink-3:#727270; --rule:#33363A; --river:#7FB2E5; --river-soft:#1B2A3A;
+  color-scheme:dark;
+}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);font-size:18px;line-height:1.6;color:var(--ink);background:var(--paper);font-variant-numeric:tabular-nums}
+a{color:inherit;text-decoration:underline;text-decoration-color:var(--rule);text-underline-offset:.2em}
+a:hover{text-decoration-color:var(--river)}
+:focus-visible{outline:2px solid var(--river);outline-offset:3px}
+ul{list-style:none}
+
+/* language: both are in the page; one is shown */
+[data-lang="uk"] [lang="en"]{display:none!important}
+[data-lang="en"] [lang="uk"]{display:none!important}
+
+.frame{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,640px) minmax(0,1fr);column-gap:clamp(20px,4vw,56px)}
+.frame > *{grid-column:2}
+
+/* the river: one line that runs the whole page */
+.river{position:fixed;left:clamp(14px,3vw,40px);top:0;bottom:0;width:60px;pointer-events:none;z-index:0}
+.river svg{height:100%;width:100%}
+.river path{fill:none;stroke:var(--river);stroke-width:1.5;opacity:.75}
+
+.top{padding-block:24px 0;display:flex;justify-content:space-between;align-items:baseline;gap:16px;font-size:15px}
+.top .brand{font-weight:600;text-decoration:none}
+.top .brand span{color:var(--ink-3);font-weight:400}
+.lang{display:inline-flex;gap:2px;border:1px solid var(--rule);border-radius:3px;overflow:hidden}
+.lang button{font:inherit;font-size:14px;padding:3px 10px;border:0;background:none;color:var(--ink-2);cursor:pointer}
+.lang button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+
+.hero{padding-block:clamp(56px,10vw,120px) clamp(32px,5vw,56px)}
+.hero h1{font-family:var(--serif);font-weight:600;font-size:clamp(2.6rem,7vw,4.6rem);line-height:1.02;letter-spacing:-.015em;font-variation-settings:'opsz' 30}
+.hero .role{font-family:var(--serif);font-weight:500;font-size:clamp(1.25rem,2.6vw,1.6rem);line-height:1.3;color:var(--ink-2);margin-top:14px;font-variation-settings:'opsz' 14}
+.hero .lede{margin-top:clamp(24px,4vw,40px);max-width:60ch}
+.hero .lede p+p{margin-top:.8em}
+.hero .links{display:flex;flex-wrap:wrap;gap:8px 20px;margin-top:22px;font-size:16px}
+
+.sect{padding-block:clamp(32px,5vw,56px);border-top:1px solid var(--rule)}
+.sect h2{font-family:var(--serif);font-weight:600;font-size:clamp(1.6rem,3.2vw,2.1rem);line-height:1.15;letter-spacing:-.01em;margin-bottom:18px;font-variation-settings:'opsz' 24}
+
+/* entries with the date hanging in the margin */
+.entry{display:grid;grid-template-columns:1fr;gap:4px 24px;padding:14px 0;border-top:1px solid var(--rule)}
+.entry:first-of-type{border-top:0;padding-top:0}
+.entry .when{font-size:15px;color:var(--river);font-weight:500;white-space:nowrap}
+.entry h3{font-size:18px;font-weight:600;line-height:1.35}
+.entry .where{color:var(--ink-2);font-size:16px}
+.entry p{margin-top:6px;max-width:60ch}
+@media (min-width:1100px){
+  .entry{grid-template-columns:1fr}
+  .entry .when{grid-column:1;margin-left:calc(-1 * (clamp(20px,4vw,56px) + 120px));width:120px;position:absolute}
+  .entry{position:relative}
+}
+
+.pairs{display:grid;grid-template-columns:max-content 1fr;gap:6px 20px;font-size:17px}
+.pairs dt{color:var(--ink-2)}
+.pairs dd{max-width:56ch}
+.pairs dd b{font-weight:500;color:var(--river)}
+.repos li{padding:10px 0;border-top:1px solid var(--rule);display:grid;grid-template-columns:1fr auto;gap:2px 20px;align-items:baseline}
+.repos li:first-child{border-top:0;padding-top:0}
+.repos a{font-weight:600;text-decoration:none}
+.repos a:hover{text-decoration:underline}
+.repos .meta{font-size:15px;color:var(--ink-3);white-space:nowrap}
+.repos p{grid-column:1/-1;font-size:16px;color:var(--ink-2);max-width:60ch}
+.lc{display:grid;grid-template-columns:1fr 1fr;gap:12px 40px;max-width:520px;font-size:17px}
+.lc dt{color:var(--ink-2)}.lc dd{font-weight:600}
+.foot{padding:20px 0 48px;border-top:1px solid var(--rule);font-size:15px;color:var(--ink-2);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px 24px}
+
+@media (max-width:720px){
+  .river{display:none}
+  .frame{grid-template-columns:clamp(16px,4vw,40px) minmax(0,1fr) clamp(16px,4vw,40px)}
+  .pairs{grid-template-columns:1fr;gap:2px}
+  .pairs dt{margin-top:8px}
+  .lc{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="river" aria-hidden="true"><svg viewBox="0 0 60 1000" preserveAspectRatio="none"><path d="M30,0 C22,120 44,180 34,300 S18,470 30,560 S46,760 28,860 S34,960 30,1000"/></svg></div>
+
+<div class="frame">
+  <header class="top">
+    <a class="brand" href="#top">PalmaLuv <span lang="uk">/ Олександр Коляса</span><span lang="en">/ Alexander Kolyasa</span></a>
+    <div class="lang" role="group" aria-label="Мова / Language">
+      <button type="button" data-set="uk" aria-pressed="true" lang="uk">Укр</button>
+      <button type="button" data-set="en" aria-pressed="false" lang="en">Eng</button>
+    </div>
+  </header>
+
+  <main id="top">
+  <section class="hero">
+    <div lang="uk">
+      <h1>Олександр Коляса</h1>
+      <p class="role">Розробник .NET і T-SQL. Дніпро. Відкритий до пропозицій.</p>
+      <div class="lede">
+        <p>Пишу бекенд на C# і тримаю дані в порядку в MS SQL Server. Останні два роки — комерційний T-SQL у Medical Plaza, мережі клінік у Дніпрі: збережені процедури, цілісність даних і REST-інтеграції навколо них.</p>
+        <p>На боці .NET — ASP.NET, WPF і WinForms з 2020 року, у навчальних проєктах і власних інструментах. Люблю API, які нудно викликати, і схеми, які нікого не дивують.</p>
+      </div>
+    </div>
+    <div lang="en">
+      <h1>Alexander Kolyasa</h1>
+      <p class="role">.NET and T-SQL developer. Dnipro, Ukraine. Open to work.</p>
+      <div class="lede">
+        <p>I write backend code in C# and keep the data behind it in order in MS SQL Server. For the last two years that has been commercial T-SQL at Medical Plaza, a clinic network in Dnipro: stored procedures, data integrity, and the REST integrations around them.</p>
+        <p>On the .NET side I have built with ASP.NET, WPF and WinForms since 2020, in study projects and my own tools. I like APIs that are boring to call and schemas that do not surprise anyone.</p>
+      </div>
+    </div>
+    <div class="links"><a href="https://github.com/PalmaLuv">GitHub</a><a href="https://www.linkedin.com/in/palmaluv/">LinkedIn</a><a href="https://leetcode.com/u/mrkyt875/">LeetCode</a></div>
+  </section>
+
+  <section class="sect" id="experience">
+    <h2 lang="uk">Досвід</h2><h2 lang="en">Experience</h2>
+    <div class="entry">
+      <div class="when" lang="uk">2022 — дотепер</div><div class="when" lang="en">2022 – now</div>
+      <h3 lang="uk">SQL-розробник, .NET-розробник</h3><h3 lang="en">SQL developer, .NET developer</h3>
+      <div class="where" lang="uk">Medical Plaza, Дніпро</div><div class="where" lang="en">Medical Plaza, Dnipro</div>
+      <p lang="uk">T-SQL-запити, збережені процедури і функції для бази клініки. Цілісність даних і оптимізація запитів. Інтеграції з зовнішніми сервісами через REST API. Внутрішні веб-інструменти й аналіз даних. Підтримка мережі: TCP/IP, DNS, DHCP.</p>
+      <p lang="en">T-SQL queries, stored procedures and functions for the clinic database. Data integrity and query tuning. REST API integrations with outside services. Internal web tools and data analysis. Network support: TCP/IP, DNS, DHCP.</p>
+    </div>
+    <div class="entry">
+      <div class="when" lang="uk">2020 — 2024</div><div class="when" lang="en">2020 – 2024</div>
+      <h3 lang="uk">Студент, розробка на .NET</h3><h3 lang="en">Student, .NET development</h3>
+      <div class="where" lang="uk">Донбаська державна машинобудівна академія</div><div class="where" lang="en">Donbas State Engineering Academy</div>
+      <p lang="uk">C#, WPF, WinForms і ASP.NET у курсових та лабораторних роботах, серед них DES-шифрувальник і набір мережевих лабораторних. Алгоритми, бази даних, мережі.</p>
+      <p lang="en">C#, WPF, WinForms and ASP.NET through coursework and lab projects, among them a DES encryptor and a set of networking labs. Algorithms, databases, networks.</p>
+    </div>
+  </section>
+
+  <section class="sect" id="skills">
+    <h2 lang="uk">Навички</h2><h2 lang="en">Skills</h2>
+    <dl class="pairs" lang="uk">
+      <dt>Мови</dt><dd><b>C#</b>, <b>T-SQL</b>, C, C++, Python, JavaScript, Lua</dd>
+      <dt>Фреймворки</dt><dd>.NET Core, ASP.NET, WPF, WinForms, Docker</dd>
+      <dt>Бази даних</dt><dd><b>MS SQL Server</b>, SQL Profiler, PostgreSQL, MySQL, Microsoft Access</dd>
+      <dt>Інструменти</dt><dd>Git, Linux, REST API, TCP/IP, DNS, DHCP</dd>
+    </dl>
+    <dl class="pairs" lang="en">
+      <dt>Languages</dt><dd><b>C#</b>, <b>T-SQL</b>, C, C++, Python, JavaScript, Lua</dd>
+      <dt>Frameworks</dt><dd>.NET Core, ASP.NET, WPF, WinForms, Docker</dd>
+      <dt>Databases</dt><dd><b>MS SQL Server</b>, SQL Profiler, PostgreSQL, MySQL, Microsoft Access</dd>
+      <dt>Tooling</dt><dd>Git, Linux, REST APIs, TCP/IP, DNS, DHCP</dd>
+    </dl>
+  </section>
+
+  <section class="sect" id="projects">
+    <h2 lang="uk">Проєкти</h2><h2 lang="en">Projects</h2>
+    <ul class="repos">
+      <li><a href="https://github.com/PalmaLuv/SteamGiftBot">SteamGiftBot</a><span class="meta">Python, 35 ★</span><p lang="uk">Автоматизує дії на SteamGifts: увімкнув — і він сам бере участь у роздачах.</p><p lang="en">Automates your actions on SteamGifts: turn it on and let it enter giveaways for you.</p></li>
+      <li><a href="https://github.com/PalmaLuv/ASCII-Image-art">ASCII-Image-art</a><span class="meta">7 ★</span><p lang="uk">Перетворює зображення на ASCII-арт.</p><p lang="en">Turns an image into ASCII art.</p></li>
+      <li><a href="https://github.com/Blockify-Launcher/Blockify-Launcher">Blockify-Launcher</a><span class="meta">C#, 3 ★</span><p lang="uk">Лаунчер в організації Blockify-Launcher зі спільною бібліотекою BlockifyLib.</p><p lang="en">Launcher built under the Blockify-Launcher organisation, with a shared library, BlockifyLib.</p></li>
+      <li><a href="https://github.com/PalmaLuv/DES-Encryptor">DES-Encryptor</a><span class="meta">C#, 2 ★</span><p lang="uk">Шифрування і розшифрування DES. Курсова робота.</p><p lang="en">DES encryption and decryption. Course work.</p></li>
+      <li><a href="https://github.com/PalmaLuv/WPFConverterMoney">WPFConverterMoney</a><span class="meta">C#</span><p lang="uk">Конвертер валют і криптовалют на WPF, на CoinCap API 2.0.</p><p lang="en">Currency and cryptocurrency converter in WPF, on the CoinCap API 2.0.</p></li>
+      <li><a href="https://github.com/PalmaLuv/SnakeGame">SnakeGame</a><span class="meta">C++, 1 ★</span><p lang="uk">Змійка на C++.</p><p lang="en">Snake, written in C++.</p></li>
+    </ul>
+  </section>
+
+  <section class="sect" id="leetcode">
+    <h2>LeetCode</h2>
+    <p lang="uk" style="color:var(--ink-2);margin-bottom:16px;max-width:60ch">Здебільшого трек баз даних — у цьому й сенс. Дані на вересень 2026, з <a href="https://leetcode.com/u/mrkyt875/">leetcode.com/u/mrkyt875</a>.</p>
+    <p lang="en" style="color:var(--ink-2);margin-bottom:16px;max-width:60ch">Mostly the database track, which is the point. As of September 2026, from <a href="https://leetcode.com/u/mrkyt875/">leetcode.com/u/mrkyt875</a>.</p>
+    <dl class="lc" lang="uk"><dt>Розв'язано</dt><dd>49: 33 легких, 10 середніх, 6 складних</dd><dt>За мовами</dt><dd>MS SQL Server 26, C# 16, MySQL 8</dd></dl>
+    <dl class="lc" lang="en"><dt>Solved</dt><dd>49: 33 easy, 10 medium, 6 hard</dd><dt>By language</dt><dd>MS SQL Server 26, C# 16, MySQL 8</dd></dl>
+  </section>
+
+  <section class="sect" id="contact">
+    <h2 lang="uk">Контакти</h2><h2 lang="en">Contact</h2>
+    <p lang="uk" style="max-width:60ch;margin-bottom:14px">Відкритий до повної зайнятості у Дніпрі чи віддалено, а також до фрилансу. Найшвидше — LinkedIn.</p>
+    <p lang="en" style="max-width:60ch;margin-bottom:14px">Open to full-time roles in Dnipro or remote, and to freelance work. LinkedIn is the quickest.</p>
+    <dl class="pairs">
+      <dt>LinkedIn</dt><dd><a href="https://www.linkedin.com/in/palmaluv/">linkedin.com/in/palmaluv</a></dd>
+      <dt>GitHub</dt><dd><a href="https://github.com/PalmaLuv">github.com/PalmaLuv</a></dd>
+      <dt>LeetCode</dt><dd><a href="https://leetcode.com/u/mrkyt875/">leetcode.com/u/mrkyt875</a></dd>
+    </dl>
+  </section>
+  </main>
+
+  <footer class="foot">
+    <span lang="uk">Олександр Коляса, 2026</span><span lang="en">Alexander Kolyasa, 2026</span>
+    <a href="https://github.com/PalmaLuv/palma.github.io"><span lang="uk">Код на GitHub</span><span lang="en">Source on GitHub</span></a>
+  </footer>
+</div>
+
+<script>
+(function(){
+  const root=document.documentElement, btns=document.querySelectorAll('.lang button');
+  let saved=null; try{saved=localStorage.getItem('lang')}catch{}
+  set(saved==='en'?'en':'uk');
+  btns.forEach(b=>b.addEventListener('click',()=>{set(b.dataset.set);try{localStorage.setItem('lang',b.dataset.set)}catch{}}));
+  function set(l){root.dataset.lang=l;root.lang=l;btns.forEach(b=>b.setAttribute('aria-pressed',b.dataset.set===l));document.title=l==='uk'?'Олександр Коляса — .NET і T-SQL':'Alexander Kolyasa — .NET and T-SQL'}
+})();
+</script>
+</body>
+</html>

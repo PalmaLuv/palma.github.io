@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://palmaluv.github.io/palma.github.io/sitemap.xml

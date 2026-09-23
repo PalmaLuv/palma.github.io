@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AK-2026 — Alexander Kolyasa, datasheet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700&family=Archivo+Narrow:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FFFFFF; --ink:#111111; --ink-2:#4B4B4B; --ink-3:#7E7E7E; --rule:#BFBFBF; --rule-2:#E3E3E3; --band:#111111; --band-ink:#FFFFFF; --red:#B3261E; --fill:#F3F3F3;
+  --sans:'Archivo',Arial,sans-serif; --narrow:'Archivo Narrow','Arial Narrow',sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root{
+  --paper:#161616; --ink:#ECECEC; --ink-2:#B5B5B5; --ink-3:#7F7F7F; --rule:#4A4A4A; --rule-2:#2C2C2C; --band:#ECECEC; --band-ink:#161616; --red:#F0645C; --fill:#202020;
+  color-scheme:dark;
+}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);font-size:15px;line-height:1.5;color:var(--ink);background:var(--paper);font-variant-numeric:tabular-nums}
+a{color:inherit;text-decoration:underline;text-decoration-color:var(--rule);text-underline-offset:.16em}
+a:hover{text-decoration-color:currentColor}
+:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+ul{list-style:none}
+.sheet{width:min(100% - 2*clamp(16px,4vw,48px),960px);margin-inline:auto;padding-block:28px 48px}
+
+/* header band, the way a component datasheet opens */
+.band{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;padding-bottom:10px;border-bottom:3px solid var(--band)}
+.band .part{font-family:var(--narrow);font-weight:700;font-size:clamp(2.2rem,6vw,4rem);line-height:1;letter-spacing:.01em}
+.band .part small{display:block;font-family:var(--sans);font-weight:400;font-size:13px;color:var(--ink-2);letter-spacing:0;margin-top:6px}
+.band .meta{text-align:right;font-size:12.5px;color:var(--ink-2);line-height:1.45}
+.band .meta b{display:block;color:var(--ink);font-weight:700;font-size:14px}
+.title{padding:14px 0 6px;font-size:clamp(1.3rem,3vw,1.9rem);font-weight:700;line-height:1.2}
+.subtitle{color:var(--ink-2);font-size:14px;margin-bottom:22px}
+.subtitle b{color:var(--red);font-weight:700}
+
+.cols{display:grid;grid-template-columns:1fr 1.2fr;gap:24px 40px;margin-bottom:8px}
+h2{font-family:var(--narrow);font-weight:700;font-size:16px;letter-spacing:.06em;text-transform:uppercase;padding:6px 0;border-bottom:1px solid var(--ink);margin:26px 0 10px;display:flex;justify-content:space-between;align-items:baseline}
+h2 small{font-family:var(--sans);font-weight:400;font-size:12px;letter-spacing:0;text-transform:none;color:var(--ink-3)}
+.cols h2{margin-top:0}
+.features li{position:relative;padding-left:14px;margin-bottom:4px}
+.features li::before{content:'';position:absolute;left:0;top:.62em;width:6px;height:6px;background:var(--ink)}
+.desc p{margin-bottom:8px;max-width:62ch}
+
+table{width:100%;border-collapse:collapse;font-size:14px;line-height:1.4}
+th,td{text-align:left;vertical-align:top;padding:6px 10px;border:1px solid var(--rule)}
+th{font-family:var(--narrow);font-weight:700;background:var(--fill);white-space:nowrap}
+td.num,th.num{text-align:right;white-space:nowrap}
+td.unit{color:var(--ink-2);white-space:nowrap}
+td.c{text-align:center}
+tr.group td{background:var(--fill);font-weight:700;font-family:var(--narrow)}
+.note{font-size:12.5px;color:var(--ink-2);margin-top:6px}
+.note sup{color:var(--red)}
+
+.pins{display:grid;grid-template-columns:260px 1fr;gap:20px 36px;align-items:start}
+.pins svg{width:100%;height:auto;font-family:var(--narrow);font-size:13px}
+.pins .pkg{fill:var(--fill);stroke:var(--ink);stroke-width:1.5}
+.pins .pin{fill:var(--paper);stroke:var(--ink);stroke-width:1.2}
+.pins text{fill:var(--ink)}
+.pins .n{font-weight:700}
+.pins .notch{fill:none;stroke:var(--ink);stroke-width:1.5}
+
+.rev td:first-child{white-space:nowrap;font-weight:700;font-family:var(--narrow)}
+.foot{margin-top:32px;padding-top:10px;border-top:3px solid var(--band);display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px 24px;font-size:12.5px;color:var(--ink-2)}
+
+@media (max-width:720px){
+  .cols{grid-template-columns:1fr}
+  .band{flex-direction:column;align-items:flex-start}.band .meta{text-align:left}
+  .pins{grid-template-columns:1fr}
+  .stack thead{display:none}
+  .stack,.stack tbody,.stack tr{display:block}
+  .stack tr{border:1px solid var(--rule);margin-bottom:8px}
+  .stack td{display:grid;grid-template-columns:96px 1fr;gap:10px;border:0;border-bottom:1px solid var(--rule-2);text-align:left}
+  .stack td:last-child{border-bottom:0}
+  .stack td::before{content:attr(data-label);font-family:var(--narrow);font-weight:700;color:var(--ink-2)}
+  .stack tr.group td{grid-template-columns:1fr}.stack tr.group td::before{content:none}
+}
+@media print{.sheet{width:100%}a{text-decoration:none}}
+</style>
+</head>
+<body>
+<main class="sheet">
+  <header class="band">
+    <div class="part">AK-2026<small>Alexander Kolyasa, online as PalmaLuv</small></div>
+    <div class="meta"><b>.NET and T-SQL developer</b>Dnipro, Ukraine<br>Rev. 2026-09, supersedes 2023 site</div>
+  </header>
+  <h1 class="title">Backend developer with a SQL Server core and .NET periphery</h1>
+  <p class="subtitle">Status: <b>active, open to work</b>. Full-time in Dnipro or remote; freelance accepted. Last verified September 2026.</p>
+
+  <div class="cols">
+    <section>
+      <h2>Features</h2>
+      <ul class="features">
+        <li>Two years of commercial T-SQL on MS SQL Server</li>
+        <li>Stored procedures, functions, data integrity, query tuning</li>
+        <li>C# with ASP.NET, WPF and WinForms since 2020</li>
+        <li>REST API integrations with outside services</li>
+        <li>Network support: TCP/IP, DNS, DHCP</li>
+        <li>Git, Docker, Linux</li>
+        <li>49 LeetCode problems, 26 of them in SQL Server</li>
+      </ul>
+    </section>
+    <section class="desc">
+      <h2>Description</h2>
+      <p>The AK-2026 is a backend developer built around MS SQL Server, with a .NET front end for the application layer. It has run in production since 2022 at Medical Plaza, a clinic network in Dnipro, where it maintains the clinic database, keeps its data honest and connects it to outside services over REST.</p>
+      <p>The .NET side has been in use since 2020 through the Donbas State Engineering Academy and a set of personal tools. The device prefers APIs that are boring to call and schemas that do not surprise anyone.</p>
+    </section>
+  </div>
+
+  <h2>Absolute maximum ratings <small>values are actuals, not limits</small></h2>
+  <table class="stack">
+    <thead><tr><th>Parameter</th><th>Conditions</th><th class="num">Value</th><th>Unit</th></tr></thead>
+    <tbody>
+      <tr><td data-label="Parameter">Commercial T-SQL</td><td data-label="Conditions">Medical Plaza, 2022 to now</td><td data-label="Value" class="num">2</td><td data-label="Unit" class="unit">years</td></tr>
+      <tr><td data-label="Parameter">.NET, C#</td><td data-label="Conditions">since 2020, study and personal projects</td><td data-label="Value" class="num">6</td><td data-label="Unit" class="unit">years</td></tr>
+      <tr><td data-label="Parameter">LeetCode problems solved</td><td data-label="Conditions">33 easy, 10 medium, 6 hard</td><td data-label="Value" class="num">49</td><td data-label="Unit" class="unit">problems</td></tr>
+      <tr><td data-label="Parameter">Public repositories</td><td data-label="Conditions">github.com/PalmaLuv, own account</td><td data-label="Value" class="num">9</td><td data-label="Unit" class="unit">repos</td></tr>
+      <tr><td data-label="Parameter">GitHub stars</td><td data-label="Conditions">six listed projects, September 2026</td><td data-label="Value" class="num">48</td><td data-label="Unit" class="unit">stars</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Operating characteristics</h2>
+  <table class="stack">
+    <thead><tr><th>Parameter</th><th>Typical</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr class="group"><td colspan="3">Languages</td></tr>
+      <tr><td data-label="Parameter">Primary</td><td data-label="Typical">C#, T-SQL</td><td data-label="Notes">daily use</td></tr>
+      <tr><td data-label="Parameter">Secondary</td><td data-label="Typical">C, C++, Python, JavaScript, Lua</td><td data-label="Notes">study and personal projects</td></tr>
+      <tr class="group"><td colspan="3">Frameworks</td></tr>
+      <tr><td data-label="Parameter">.NET</td><td data-label="Typical">.NET Core, ASP.NET, WPF, WinForms</td><td data-label="Notes"></td></tr>
+      <tr><td data-label="Parameter">Containers</td><td data-label="Typical">Docker</td><td data-label="Notes"></td></tr>
+      <tr class="group"><td colspan="3">Databases</td></tr>
+      <tr><td data-label="Parameter">Primary</td><td data-label="Typical">MS SQL Server, SQL Profiler</td><td data-label="Notes">commercial</td></tr>
+      <tr><td data-label="Parameter">Secondary</td><td data-label="Typical">PostgreSQL, MySQL, Microsoft Access</td><td data-label="Notes"></td></tr>
+      <tr class="group"><td colspan="3">Tooling</td></tr>
+      <tr><td data-label="Parameter">Version control, OS</td><td data-label="Typical">Git, Linux</td><td data-label="Notes"></td></tr>
+      <tr><td data-label="Parameter">Network</td><td data-label="Typical">REST APIs, TCP/IP, DNS, DHCP</td><td data-label="Notes"></td></tr>
+    </tbody>
+  </table>
+
+  <h2>Operating history</h2>
+  <table class="stack">
+    <thead><tr><th>Period</th><th>Role</th><th>Site</th><th>Function</th></tr></thead>
+    <tbody>
+      <tr><td data-label="Period">2022 to now</td><td data-label="Role">SQL developer, .NET developer</td><td data-label="Site">Medical Plaza, Dnipro</td><td data-label="Function">T-SQL queries, stored procedures and functions for the clinic database. Data integrity and query tuning. REST API integrations. Internal web tools and data analysis. Network support.</td></tr>
+      <tr><td data-label="Period">2020 to 2024</td><td data-label="Role">Student, .NET development</td><td data-label="Site">Donbas State Engineering Academy</td><td data-label="Function">C#, WPF, WinForms and ASP.NET through coursework and lab projects. Algorithms, databases, networks.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Typical applications <small>public repositories, September 2026</small></h2>
+  <table class="stack">
+    <thead><tr><th>Repository</th><th>Language</th><th class="num">Stars</th><th>Application</th></tr></thead>
+    <tbody>
+      <tr><td data-label="Repository"><a href="https://github.com/PalmaLuv/SteamGiftBot">SteamGiftBot</a></td><td data-label="Language">Python</td><td data-label="Stars" class="num">35</td><td data-label="Application">Automates your actions on SteamGifts: turn it on and let it enter giveaways for you.</td></tr>
+      <tr><td data-label="Repository"><a href="https://github.com/PalmaLuv/ASCII-Image-art">ASCII-Image-art</a></td><td data-label="Language">Release build</td><td data-label="Stars" class="num">7</td><td data-label="Application">Turns an image into ASCII art.</td></tr>
+      <tr><td data-label="Repository"><a href="https://github.com/Blockify-Launcher/Blockify-Launcher">Blockify-Launcher</a></td><td data-label="Language">C#</td><td data-label="Stars" class="num">3</td><td data-label="Application">Launcher built under the Blockify-Launcher organisation, with a shared library, BlockifyLib.</td></tr>
+      <tr><td data-label="Repository"><a href="https://github.com/PalmaLuv/DES-Encryptor">DES-Encryptor</a></td><td data-label="Language">C#</td><td data-label="Stars" class="num">2</td><td data-label="Application">DES encryption and decryption. Course work.</td></tr>
+      <tr><td data-label="Repository"><a href="https://github.com/PalmaLuv/WPFConverterMoney">WPFConverterMoney</a></td><td data-label="Language">C#</td><td data-label="Stars" class="num">0</td><td data-label="Application">Currency and cryptocurrency converter in WPF, on the CoinCap API 2.0.</td></tr>
+      <tr><td data-label="Repository"><a href="https://github.com/PalmaLuv/SnakeGame">SnakeGame</a></td><td data-label="Language">C++</td><td data-label="Stars" class="num">1</td><td data-label="Application">Snake, written in C++.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Test results <small>LeetCode, leetcode.com/u/mrkyt875</small></h2>
+  <div class="cols">
+    <table>
+      <thead><tr><th>Language</th><th class="num">Solved</th></tr></thead>
+      <tbody><tr><td>MS SQL Server</td><td class="num">26</td></tr><tr><td>C#</td><td class="num">16</td></tr><tr><td>MySQL</td><td class="num">8</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th>Difficulty</th><th class="num">Solved</th><th class="num">Of</th></tr></thead>
+      <tbody><tr><td>Easy</td><td class="num">33</td><td class="num">966</td></tr><tr><td>Medium</td><td class="num">10</td><td class="num">2117</td></tr><tr><td>Hard</td><td class="num">6</td><td class="num">977</td></tr></tbody>
+    </table>
+  </div>
+
+  <h2>Pin configuration <small>contact</small></h2>
+  <div class="pins">
+    <svg viewBox="0 0 260 200" role="img" aria-label="Four-pin package: 1 LinkedIn, 2 GitHub, 3 LeetCode, 4 not connected">
+      <rect class="pkg" x="70" y="20" width="120" height="160" rx="4"/>
+      <path class="notch" d="M118,20 a12,12 0 0,0 24,0"/>
+      <rect class="pin" x="40" y="44" width="30" height="14"/><text class="n" x="48" y="55">1</text>
+      <rect class="pin" x="40" y="94" width="30" height="14"/><text class="n" x="48" y="105">2</text>
+      <rect class="pin" x="190" y="94" width="30" height="14"/><text class="n" x="200" y="105">3</text>
+      <rect class="pin" x="190" y="44" width="30" height="14"/><text class="n" x="200" y="55">4</text>
+      <text x="130" y="112" text-anchor="middle" font-weight="700">AK-2026</text>
+      <text x="130" y="130" text-anchor="middle" fill="var(--ink-2)">PalmaLuv</text>
+    </svg>
+    <table>
+      <thead><tr><th class="c">Pin</th><th>Name</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td class="c">1</td><td>LinkedIn</td><td><a href="https://www.linkedin.com/in/palmaluv/">linkedin.com/in/palmaluv</a>. Quickest response.</td></tr>
+        <tr><td class="c">2</td><td>GitHub</td><td><a href="https://github.com/PalmaLuv">github.com/PalmaLuv</a></td></tr>
+        <tr><td class="c">3</td><td>LeetCode</td><td><a href="https://leetcode.com/u/mrkyt875/">leetcode.com/u/mrkyt875</a></td></tr>
+        <tr><td class="c">4</td><td>NC</td><td>Reserved for email.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Revision history</h2>
+  <table class="rev">
+    <thead><tr><th>Revision</th><th>Change</th></tr></thead>
+    <tbody>
+      <tr><td>2023</td><td>First release of the portfolio site, two pages, particle background.</td></tr>
+      <tr><td>2026-09</td><td>Redesign as a single sheet. All figures re-verified against GitHub and LeetCode.</td></tr>
+    </tbody>
+  </table>
+
+  <footer class="foot">
+    <span>AK-2026, Rev. 2026-09, page 1 of 1</span>
+    <span><a href="https://github.com/PalmaLuv/palma.github.io">Source on GitHub</a></span>
+  </footer>
+</main>
+</body>
+</html>

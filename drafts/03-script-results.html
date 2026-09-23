@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en" data-view="script">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alexander Kolyasa — script and results</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F2F3F5; --sheet:#FFFFFF; --ink:#16191D; --ink-2:#565E68; --ink-3:#8A929C; --rule:#CBD0D6;
+  --kw:#0038A8; --ty:#1F6E73; --str:#A31515; --num:#098658; --cm:#6A737D; --gutter:#F6F7F8; --ln:#A8AFB8;
+  --sans:'IBM Plex Sans',system-ui,sans-serif; --mono:'IBM Plex Mono',ui-monospace,Consolas,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root{
+  --paper:#15181C; --sheet:#1C2025; --ink:#E5E8EC; --ink-2:#A6AEB7; --ink-3:#6C757F; --rule:#333A42;
+  --kw:#7FB4FF; --ty:#5AC8CF; --str:#F08A8A; --num:#7ED3A6; --cm:#7C8792; --gutter:#181C21; --ln:#4C5560;
+  color-scheme:dark;
+}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);font-size:17px;line-height:1.6;color:var(--ink);background:var(--paper);font-variant-numeric:tabular-nums}
+a{color:inherit;text-decoration:underline;text-decoration-color:var(--rule);text-underline-offset:.18em}
+a:hover{text-decoration-color:currentColor}
+:focus-visible{outline:2px solid var(--kw);outline-offset:3px}
+ul{list-style:none}
+.page{width:min(100% - 2*clamp(16px,4vw,48px),1040px);margin-inline:auto}
+
+.nav{border-bottom:1px solid var(--rule);background:var(--paper);position:sticky;top:0;z-index:2}
+.nav .page{display:flex;align-items:center;gap:20px;min-height:58px;font-size:15px;flex-wrap:wrap}
+.nav b{font-weight:600}.nav span{color:var(--ink-3)}
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:4px;overflow:hidden;margin-left:auto}
+.seg button{font:inherit;font-size:14px;padding:5px 14px;background:none;border:0;color:var(--ink-2);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.nav-links{display:flex;gap:18px;font-size:14px}
+.nav-links a{text-decoration:none;color:var(--ink-2)}
+[data-view="script"] .nav-links{display:none}
+
+.head{padding-block:clamp(32px,5vw,56px) 20px}
+.head h1{font-size:clamp(2rem,4.4vw,3rem);font-weight:600;line-height:1.1}
+.head p{color:var(--ink-2);max-width:62ch;margin-top:8px}
+.head p b{font-weight:500;color:var(--ink)}
+.head .hint{font-size:14px;color:var(--ink-3);margin-top:12px}
+
+/* views */
+[data-view="script"] .results{display:none}
+[data-view="results"] .script{display:none}
+
+/* script view */
+.script{padding-bottom:56px}
+.editor{background:var(--sheet);border:1px solid var(--rule);border-radius:4px;overflow:hidden}
+.editor .tab{font-family:var(--mono);font-size:12.5px;color:var(--ink-2);padding:8px 14px;border-bottom:1px solid var(--rule);background:var(--gutter)}
+.editor pre{font-family:var(--mono);font-size:14px;line-height:1.65;overflow-x:auto;padding:12px 0;counter-reset:ln}
+.editor pre code{display:block}
+.editor .l{display:block;padding:0 18px 0 62px;position:relative;white-space:pre}
+.editor .l::before{counter-increment:ln;content:counter(ln);position:absolute;left:0;width:44px;text-align:right;color:var(--ln);user-select:none}
+.editor .l:hover{background:var(--gutter)}
+.kw{color:var(--kw);font-weight:500}.ty{color:var(--ty)}.str{color:var(--str)}.num{color:var(--num)}.cm{color:var(--cm)}
+.editor .l a{color:var(--str)}
+.msg{font-family:var(--mono);font-size:13px;color:var(--ink-2);padding:10px 18px;border-top:1px solid var(--rule);background:var(--gutter)}
+
+/* results view */
+.section{padding-block:clamp(28px,5vw,48px);border-top:1px solid var(--rule)}
+.section:first-of-type{border-top:0}
+.section h2{font-size:1.4rem;font-weight:600;line-height:1.15}
+.section .lede{color:var(--ink-2);max-width:62ch;margin:6px 0 18px}
+.grid{width:100%;border-collapse:collapse;font-size:15px;line-height:1.5}
+.grid th,.grid td{text-align:left;vertical-align:top;padding:9px 18px 9px 0}
+.grid th{font-weight:500;color:var(--ink-2);border-bottom:2px solid var(--ink);white-space:nowrap;font-size:14px}
+.grid td{border-bottom:1px solid var(--rule)}
+.grid th:last-child,.grid td:last-child{padding-right:0}
+.grid .num{text-align:right;white-space:nowrap}
+.grid .strong{font-weight:500}.grid .muted{color:var(--ink-2)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:20px clamp(24px,5vw,64px)}
+.footer{border-top:1px solid var(--rule);padding-block:20px 40px;font-size:14px;color:var(--ink-2)}
+.footer .page{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px 24px}
+
+@media (max-width:720px){
+  .two{grid-template-columns:1fr}
+  .editor pre{font-size:13px}
+  .grid.stack thead{display:none}
+  .grid.stack,.grid.stack tbody,.grid.stack tr{display:block}
+  .grid.stack tr{padding:10px 0;border-bottom:1px solid var(--rule)}
+  .grid.stack tr:first-child{border-top:2px solid var(--ink)}
+  .grid.stack td{display:grid;grid-template-columns:90px 1fr;gap:12px;padding:3px 0;border:0}
+  .grid.stack td::before{content:attr(data-label);font-size:13px;color:var(--ink-3);padding-top:3px}
+  .grid.stack td.num{text-align:left}
+}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="page">
+  <a href="#top" style="text-decoration:none"><b>PalmaLuv</b> <span>/ Alexander Kolyasa</span></a>
+  <div class="nav-links"><a href="#experience">Experience</a><a href="#skills">Skills</a><a href="#projects">Projects</a><a href="#contact">Contact</a></div>
+  <div class="seg" role="group" aria-label="View">
+    <button type="button" data-set="script" aria-pressed="true">Script</button>
+    <button type="button" data-set="results" aria-pressed="false">Results</button>
+  </div>
+</div></nav>
+
+<main id="top">
+<div class="head page">
+  <h1>Alexander Kolyasa</h1>
+  <p>Online as <b>PalmaLuv</b>. .NET and T-SQL developer in Dnipro, Ukraine. Open to work.</p>
+  <p class="hint">One profile, two views. Script is how I would define it; Results is what you get back. Your choice is remembered.</p>
+</div>
+
+<!-- ===================== SCRIPT ===================== -->
+<section class="script page" aria-label="Profile as a T-SQL script">
+<div class="editor">
+  <div class="tab">profile.sql</div>
+<pre><code><span class="l"><span class="cm">-- Alexander Kolyasa, online as PalmaLuv. Dnipro, Ukraine.</span></span>
+<span class="l"><span class="cm">-- Backend on .NET, data on SQL Server. Open to work.</span></span>
+<span class="l"></span>
+<span class="l"><span class="kw">CREATE TABLE</span> dbo.Developer (</span>
+<span class="l">    Name    <span class="ty">nvarchar</span>(64) <span class="kw">NOT NULL</span>,</span>
+<span class="l">    Handle  <span class="ty">nvarchar</span>(32) <span class="kw">NOT NULL UNIQUE</span>,</span>
+<span class="l">    Role    <span class="ty">nvarchar</span>(64) <span class="kw">NOT NULL</span>,</span>
+<span class="l">    City    <span class="ty">nvarchar</span>(32) <span class="kw">NOT NULL</span>,</span>
+<span class="l">    Status  <span class="ty">nvarchar</span>(16) <span class="kw">NOT NULL DEFAULT</span> <span class="str">N'open to work'</span></span>
+<span class="l">);</span>
+<span class="l"><span class="kw">INSERT INTO</span> dbo.Developer (Name, Handle, Role, City)</span>
+<span class="l"><span class="kw">VALUES</span> (<span class="str">N'Alexander Kolyasa'</span>, <span class="str">N'PalmaLuv'</span>, <span class="str">N'.NET and T-SQL developer'</span>, <span class="str">N'Dnipro, Ukraine'</span>);</span>
+<span class="l"><span class="kw">GO</span></span>
+<span class="l"></span>
+<span class="l"><span class="cm">-- Commercial work first, then the study years where the .NET habit started.</span></span>
+<span class="l"><span class="kw">CREATE TABLE</span> dbo.Experience (</span>
+<span class="l">    YearFrom <span class="ty">smallint</span> <span class="kw">NOT NULL</span>, YearTo <span class="ty">smallint</span> <span class="kw">NULL</span>,   <span class="cm">-- NULL means still there</span></span>
+<span class="l">    Company  <span class="ty">nvarchar</span>(64), Role <span class="ty">nvarchar</span>(64), Notes <span class="ty">nvarchar</span>(<span class="kw">max</span>)</span>
+<span class="l">);</span>
+<span class="l"><span class="kw">INSERT INTO</span> dbo.Experience <span class="kw">VALUES</span></span>
+<span class="l">    (<span class="num">2022</span>, <span class="kw">NULL</span>, <span class="str">N'Medical Plaza, Dnipro'</span>, <span class="str">N'SQL developer, .NET developer'</span>,</span>
+<span class="l">     <span class="str">N'T-SQL queries, stored procedures and functions for the clinic database. Data integrity and query tuning. REST API integrations. Internal web tools. Network support: TCP/IP, DNS, DHCP.'</span>),</span>
+<span class="l">    (<span class="num">2020</span>, <span class="num">2024</span>, <span class="str">N'Donbas State Engineering Academy'</span>, <span class="str">N'Student, .NET development'</span>,</span>
+<span class="l">     <span class="str">N'C#, WPF, WinForms and ASP.NET through coursework and lab projects. Algorithms, databases, networks.'</span>);</span>
+<span class="l"><span class="kw">GO</span></span>
+<span class="l"></span>
+<span class="l"><span class="kw">CREATE TABLE</span> dbo.Skill ([Group] <span class="ty">nvarchar</span>(32), Name <span class="ty">nvarchar</span>(32), IsSqlServer <span class="ty">bit</span> <span class="kw">DEFAULT</span> <span class="num">0</span>);</span>
+<span class="l"><span class="kw">INSERT INTO</span> dbo.Skill ([Group], Name, IsSqlServer) <span class="kw">VALUES</span></span>
+<span class="l">    (<span class="str">N'Languages'</span>,  <span class="str">N'C#'</span>, <span class="num">0</span>), (<span class="str">N'Languages'</span>, <span class="str">N'T-SQL'</span>, <span class="num">1</span>), (<span class="str">N'Languages'</span>, <span class="str">N'C'</span>, <span class="num">0</span>), (<span class="str">N'Languages'</span>, <span class="str">N'C++'</span>, <span class="num">0</span>),</span>
+<span class="l">    (<span class="str">N'Languages'</span>,  <span class="str">N'Python'</span>, <span class="num">0</span>), (<span class="str">N'Languages'</span>, <span class="str">N'JavaScript'</span>, <span class="num">0</span>), (<span class="str">N'Languages'</span>, <span class="str">N'Lua'</span>, <span class="num">0</span>),</span>
+<span class="l">    (<span class="str">N'Frameworks'</span>, <span class="str">N'.NET Core'</span>, <span class="num">0</span>), (<span class="str">N'Frameworks'</span>, <span class="str">N'ASP.NET'</span>, <span class="num">0</span>), (<span class="str">N'Frameworks'</span>, <span class="str">N'WPF'</span>, <span class="num">0</span>), (<span class="str">N'Frameworks'</span>, <span class="str">N'WinForms'</span>, <span class="num">0</span>), (<span class="str">N'Frameworks'</span>, <span class="str">N'Docker'</span>, <span class="num">0</span>),</span>
+<span class="l">    (<span class="str">N'Databases'</span>,  <span class="str">N'MS SQL Server'</span>, <span class="num">1</span>), (<span class="str">N'Databases'</span>, <span class="str">N'SQL Profiler'</span>, <span class="num">1</span>), (<span class="str">N'Databases'</span>, <span class="str">N'PostgreSQL'</span>, <span class="num">0</span>), (<span class="str">N'Databases'</span>, <span class="str">N'MySQL'</span>, <span class="num">0</span>), (<span class="str">N'Databases'</span>, <span class="str">N'Microsoft Access'</span>, <span class="num">0</span>),</span>
+<span class="l">    (<span class="str">N'Tooling'</span>,    <span class="str">N'Git'</span>, <span class="num">0</span>), (<span class="str">N'Tooling'</span>, <span class="str">N'Linux'</span>, <span class="num">0</span>), (<span class="str">N'Tooling'</span>, <span class="str">N'REST APIs'</span>, <span class="num">0</span>), (<span class="str">N'Tooling'</span>, <span class="str">N'TCP/IP, DNS, DHCP'</span>, <span class="num">0</span>);</span>
+<span class="l"><span class="kw">GO</span></span>
+<span class="l"></span>
+<span class="l"><span class="cm">-- Public repositories, newest activity first. Stars as of September 2026.</span></span>
+<span class="l"><span class="kw">CREATE TABLE</span> dbo.Project (Repo <span class="ty">nvarchar</span>(64), Language <span class="ty">nvarchar</span>(16), Stars <span class="ty">int</span>, About <span class="ty">nvarchar</span>(200), Url <span class="ty">nvarchar</span>(200));</span>
+<span class="l"><span class="kw">INSERT INTO</span> dbo.Project <span class="kw">VALUES</span></span>
+<span class="l">    (<span class="str">N'SteamGiftBot'</span>,      <span class="str">N'Python'</span>, <span class="num">35</span>, <span class="str">N'Automates your actions on SteamGifts: turn it on and let it enter giveaways for you.'</span>, <a href="https://github.com/PalmaLuv/SteamGiftBot">'https://github.com/PalmaLuv/SteamGiftBot'</a>),</span>
+<span class="l">    (<span class="str">N'ASCII-Image-art'</span>,   <span class="kw">NULL</span>,      <span class="num">7</span>, <span class="str">N'Turns an image into ASCII art.'</span>, <a href="https://github.com/PalmaLuv/ASCII-Image-art">'https://github.com/PalmaLuv/ASCII-Image-art'</a>),</span>
+<span class="l">    (<span class="str">N'Blockify-Launcher'</span>, <span class="str">N'C#'</span>,      <span class="num">3</span>, <span class="str">N'Launcher built under the Blockify-Launcher organisation, with a shared library, BlockifyLib.'</span>, <a href="https://github.com/Blockify-Launcher/Blockify-Launcher">'https://github.com/Blockify-Launcher/Blockify-Launcher'</a>),</span>
+<span class="l">    (<span class="str">N'DES-Encryptor'</span>,     <span class="str">N'C#'</span>,      <span class="num">2</span>, <span class="str">N'DES encryption and decryption. Course work.'</span>, <a href="https://github.com/PalmaLuv/DES-Encryptor">'https://github.com/PalmaLuv/DES-Encryptor'</a>),</span>
+<span class="l">    (<span class="str">N'WPFConverterMoney'</span>, <span class="str">N'C#'</span>,      <span class="num">0</span>, <span class="str">N'Currency and cryptocurrency converter in WPF, on the CoinCap API 2.0.'</span>, <a href="https://github.com/PalmaLuv/WPFConverterMoney">'https://github.com/PalmaLuv/WPFConverterMoney'</a>),</span>
+<span class="l">    (<span class="str">N'SnakeGame'</span>,         <span class="str">N'C++'</span>,     <span class="num">1</span>, <span class="str">N'Snake, written in C++.'</span>, <a href="https://github.com/PalmaLuv/SnakeGame">'https://github.com/PalmaLuv/SnakeGame'</a>);</span>
+<span class="l"><span class="kw">GO</span></span>
+<span class="l"></span>
+<span class="l"><span class="cm">-- LeetCode, mostly the database track. leetcode.com/u/mrkyt875, September 2026.</span></span>
+<span class="l"><span class="kw">CREATE TABLE</span> dbo.LeetCode (Metric <span class="ty">nvarchar</span>(16), Bucket <span class="ty">nvarchar</span>(16), Solved <span class="ty">int</span>);</span>
+<span class="l"><span class="kw">INSERT INTO</span> dbo.LeetCode <span class="kw">VALUES</span></span>
+<span class="l">    (<span class="str">N'language'</span>, <span class="str">N'MS SQL Server'</span>, <span class="num">26</span>), (<span class="str">N'language'</span>, <span class="str">N'C#'</span>, <span class="num">16</span>), (<span class="str">N'language'</span>, <span class="str">N'MySQL'</span>, <span class="num">8</span>),</span>
+<span class="l">    (<span class="str">N'difficulty'</span>, <span class="str">N'Easy'</span>, <span class="num">33</span>), (<span class="str">N'difficulty'</span>, <span class="str">N'Medium'</span>, <span class="num">10</span>), (<span class="str">N'difficulty'</span>, <span class="str">N'Hard'</span>, <span class="num">6</span>);</span>
+<span class="l"><span class="kw">GO</span></span>
+<span class="l"></span>
+<span class="l"><span class="cm">-- Open to full-time roles in Dnipro or remote, and to freelance work. LinkedIn is the quickest.</span></span>
+<span class="l"><span class="kw">CREATE TABLE</span> dbo.Contact (Channel <span class="ty">nvarchar</span>(16) <span class="kw">PRIMARY KEY</span>, Url <span class="ty">nvarchar</span>(200));</span>
+<span class="l"><span class="kw">INSERT INTO</span> dbo.Contact <span class="kw">VALUES</span></span>
+<span class="l">    (<span class="str">N'LinkedIn'</span>, <a href="https://www.linkedin.com/in/palmaluv/">'https://www.linkedin.com/in/palmaluv/'</a>),</span>
+<span class="l">    (<span class="str">N'GitHub'</span>,   <a href="https://github.com/PalmaLuv">'https://github.com/PalmaLuv'</a>),</span>
+<span class="l">    (<span class="str">N'LeetCode'</span>, <a href="https://leetcode.com/u/mrkyt875/">'https://leetcode.com/u/mrkyt875/'</a>);</span>
+<span class="l"><span class="kw">GO</span></span>
+<span class="l"></span>
+<span class="l"><span class="kw">SELECT</span> * <span class="kw">FROM</span> dbo.Developer;   <span class="cm">-- switch to Results to see the rows</span></span></code></pre>
+  <div class="msg">Commands completed successfully. Switch to Results for the rows.</div>
+</div>
+</section>
+
+<!-- ===================== RESULTS ===================== -->
+<div class="results">
+<section class="section" id="developer"><div class="page">
+  <h2>Developer</h2>
+  <table class="grid stack"><thead><tr><th>Name</th><th>Handle</th><th>Role</th><th>City</th><th>Status</th></tr></thead><tbody>
+    <tr><td data-label="Name" class="strong">Alexander Kolyasa</td><td data-label="Handle">PalmaLuv</td><td data-label="Role">.NET and T-SQL developer</td><td data-label="City">Dnipro, Ukraine</td><td data-label="Status">open to work</td></tr>
+  </tbody></table>
+</div></section>
+
+<section class="section" id="experience"><div class="page">
+  <h2>Experience</h2>
+  <p class="lede">Commercial work first, then the study years where the .NET habit started.</p>
+  <table class="grid stack"><thead><tr><th>Period</th><th>Role</th><th>Where</th><th>What I did</th></tr></thead><tbody>
+    <tr><td data-label="Period" class="strong">2022 – now</td><td data-label="Role" class="strong">SQL developer, .NET developer</td><td data-label="Where">Medical Plaza, Dnipro</td><td data-label="What I did">T-SQL queries, stored procedures and functions for the clinic database. Data integrity and query tuning. REST API integrations. Internal web tools and data analysis. Network support: TCP/IP, DNS, DHCP.</td></tr>
+    <tr><td data-label="Period" class="strong">2020 – 2024</td><td data-label="Role" class="strong">Student, .NET development</td><td data-label="Where">Donbas State Engineering Academy</td><td data-label="What I did">C#, WPF, WinForms and ASP.NET through coursework and lab projects. Algorithms, databases, networks.</td></tr>
+  </tbody></table>
+</div></section>
+
+<section class="section" id="skills"><div class="page">
+  <h2>Skills</h2>
+  <table class="grid stack"><thead><tr><th>Group</th><th>Tools</th></tr></thead><tbody>
+    <tr><td data-label="Group" class="strong">Languages</td><td data-label="Tools">C#, T-SQL, C, C++, Python, JavaScript, Lua</td></tr>
+    <tr><td data-label="Group" class="strong">Frameworks</td><td data-label="Tools">.NET Core, ASP.NET, WPF, WinForms, Docker</td></tr>
+    <tr><td data-label="Group" class="strong">Databases</td><td data-label="Tools">MS SQL Server, SQL Profiler, PostgreSQL, MySQL, Microsoft Access</td></tr>
+    <tr><td data-label="Group" class="strong">Tooling</td><td data-label="Tools">Git, Linux, REST APIs, TCP/IP, DNS, DHCP</td></tr>
+  </tbody></table>
+</div></section>
+
+<section class="section" id="projects"><div class="page">
+  <h2>Projects</h2>
+  <table class="grid stack"><thead><tr><th>Repository</th><th>Language</th><th class="num">Stars</th><th>About</th></tr></thead><tbody>
+    <tr><td data-label="Repository"><a href="https://github.com/PalmaLuv/SteamGiftBot">SteamGiftBot</a></td><td data-label="Language" class="muted">Python</td><td data-label="Stars" class="num">35</td><td data-label="About">Automates your actions on SteamGifts: turn it on and let it enter giveaways for you.</td></tr>
+    <tr><td data-label="Repository"><a href="https://github.com/PalmaLuv/ASCII-Image-art">ASCII-Image-art</a></td><td data-label="Language" class="muted">NULL</td><td data-label="Stars" class="num">7</td><td data-label="About">Turns an image into ASCII art.</td></tr>
+    <tr><td data-label="Repository"><a href="https://github.com/Blockify-Launcher/Blockify-Launcher">Blockify-Launcher</a></td><td data-label="Language" class="muted">C#</td><td data-label="Stars" class="num">3</td><td data-label="About">Launcher built under the Blockify-Launcher organisation, with a shared library, BlockifyLib.</td></tr>
+    <tr><td data-label="Repository"><a href="https://github.com/PalmaLuv/DES-Encryptor">DES-Encryptor</a></td><td data-label="Language" class="muted">C#</td><td data-label="Stars" class="num">2</td><td data-label="About">DES encryption and decryption. Course work.</td></tr>
+    <tr><td data-label="Repository"><a href="https://github.com/PalmaLuv/WPFConverterMoney">WPFConverterMoney</a></td><td data-label="Language" class="muted">C#</td><td data-label="Stars" class="num">0</td><td data-label="About">Currency and cryptocurrency converter in WPF, on the CoinCap API 2.0.</td></tr>
+    <tr><td data-label="Repository"><a href="https://github.com/PalmaLuv/SnakeGame">SnakeGame</a></td><td data-label="Language" class="muted">C++</td><td data-label="Stars" class="num">1</td><td data-label="About">Snake, written in C++.</td></tr>
+  </tbody></table>
+</div></section>
+
+<section class="section" id="leetcode"><div class="page">
+  <h2>LeetCode</h2>
+  <p class="lede">Mostly the database track. As of September 2026, from <a href="https://leetcode.com/u/mrkyt875/">leetcode.com/u/mrkyt875</a>.</p>
+  <div class="two">
+    <table class="grid"><thead><tr><th>Language</th><th class="num">Solved</th></tr></thead><tbody><tr><td>MS SQL Server</td><td class="num">26</td></tr><tr><td>C#</td><td class="num">16</td></tr><tr><td>MySQL</td><td class="num">8</td></tr></tbody></table>
+    <table class="grid"><thead><tr><th>Difficulty</th><th class="num">Solved</th></tr></thead><tbody><tr><td>Easy</td><td class="num">33</td></tr><tr><td>Medium</td><td class="num">10</td></tr><tr><td>Hard</td><td class="num">6</td></tr></tbody></table>
+  </div>
+</div></section>
+
+<section class="section" id="contact"><div class="page">
+  <h2>Contact</h2>
+  <p class="lede">Open to full-time roles in Dnipro or remote, and to freelance work. LinkedIn is the quickest.</p>
+  <table class="grid" style="max-width:560px"><thead><tr><th>Channel</th><th>Url</th></tr></thead><tbody>
+    <tr><td>LinkedIn</td><td><a href="https://www.linkedin.com/in/palmaluv/">linkedin.com/in/palmaluv</a></td></tr>
+    <tr><td>GitHub</td><td><a href="https://github.com/PalmaLuv">github.com/PalmaLuv</a></td></tr>
+    <tr><td>LeetCode</td><td><a href="https://leetcode.com/u/mrkyt875/">leetcode.com/u/mrkyt875</a></td></tr>
+  </tbody></table>
+</div></section>
+</div>
+</main>
+<footer class="footer"><div class="page"><p>Alexander Kolyasa, 2026</p><p><a href="https://github.com/PalmaLuv/palma.github.io">Source on GitHub</a></p></div></footer>
+
+<script>
+(function(){
+  const root=document.documentElement, btns=document.querySelectorAll('.seg button');
+  let saved=null; try{saved=localStorage.getItem('view')}catch{}
+  set(saved==='results'?'results':'script');
+  btns.forEach(b=>b.addEventListener('click',()=>{set(b.dataset.set);try{localStorage.setItem('view',b.dataset.set)}catch{}}));
+  function set(v){root.dataset.view=v;btns.forEach(b=>b.setAttribute('aria-pressed',b.dataset.set===v))}
+  document.querySelectorAll('.nav-links a').forEach(a=>a.addEventListener('click',()=>set('results')));
+})();
+</script>
+</body>
+</html>

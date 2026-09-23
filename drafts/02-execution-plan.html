@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alexander Kolyasa — execution plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F7F7F5; --ink:#1E2226; --ink-2:#5C646D; --ink-3:#8E969F; --rule:#D3D7DC;
+  --tip:#FFFBE3; --tip-bd:#CFC79A; --node:#FFFFFF; --node-bd:#9AA3AD; --arrow:#5F6B78; --hot:#C8452B; --warm:#E1A23A;
+  --sans:'Source Sans 3',system-ui,sans-serif; --mono:'Source Code Pro',ui-monospace,Consolas,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root{
+  --paper:#1B1E22; --ink:#E9ECEF; --ink-2:#A9B1B9; --ink-3:#727B85; --rule:#343A41;
+  --tip:#2E2C1F; --tip-bd:#6E6740; --node:#24282D; --node-bd:#5C6773; --arrow:#8A96A3; --hot:#F0714F; --warm:#F0B95A;
+  color-scheme:dark;
+}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);font-size:18px;line-height:1.55;color:var(--ink);background:var(--paper);font-variant-numeric:tabular-nums}
+a{color:inherit;text-decoration:underline;text-decoration-color:var(--rule);text-underline-offset:.18em}
+a:hover{text-decoration-color:currentColor}
+:focus-visible{outline:2px solid var(--hot);outline-offset:3px}
+ul{list-style:none}
+.page{width:min(100% - 2*clamp(16px,4vw,48px),1060px);margin-inline:auto}
+.nav{border-bottom:1px solid var(--rule)}
+.nav .page{display:flex;align-items:center;gap:24px;min-height:56px;font-size:16px}
+.nav b{font-weight:700}.nav span{color:var(--ink-3)}
+.nav-links{display:flex;gap:20px;margin-left:auto}.nav-links a{text-decoration:none;color:var(--ink-2)}
+
+.hero{padding-block:clamp(36px,6vw,64px) 16px}
+.hero h1{font-size:clamp(2rem,4.6vw,3.25rem);font-weight:700;line-height:1.08}
+.hero .sub{color:var(--ink-2);max-width:62ch;margin-top:8px}
+.hero .sub b{color:var(--ink);font-weight:600}
+.querybar{font-family:var(--mono);font-size:14px;color:var(--ink-2);margin-top:22px;padding:8px 12px;border:1px solid var(--rule);border-radius:3px;background:var(--node);overflow-x:auto;white-space:pre}
+.querybar .kw{color:var(--hot)}
+
+/* the plan */
+.plan{margin-top:14px}
+.plan svg{width:100%;height:auto;display:block;font-family:var(--sans)}
+.plan .op rect{fill:var(--node);stroke:var(--node-bd);stroke-width:1}
+.plan .op:hover rect{stroke:var(--hot);stroke-width:1.5}
+.plan .op .glyph{fill:none;stroke:var(--ink);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.plan .op .name{font-size:13.5px;font-weight:600;fill:var(--ink)}
+.plan .op .obj{font-size:12.5px;fill:var(--ink-2)}
+.plan .op .cost{font-size:12.5px;fill:var(--ink)}
+.plan .op .cost.hot{fill:var(--hot);font-weight:600}
+.plan .arrow{fill:none;stroke:var(--arrow)}
+.plan .head{stroke:var(--arrow);fill:var(--arrow)}
+.plan-note{font-size:15px;color:var(--ink-2);margin-top:10px;max-width:70ch}
+.plan-list{display:none}
+
+.section{padding-block:clamp(28px,5vw,52px);border-top:1px solid var(--rule)}
+/* the SSMS operator tooltip as a section header */
+.tip{background:var(--tip);border:1px solid var(--tip-bd);padding:14px 18px 12px;max-width:560px;margin-bottom:22px;font-size:15px;line-height:1.45}
+.tip h2{font-size:1.25rem;font-weight:700;margin-bottom:6px}
+.tip p{color:var(--ink-2);margin-bottom:8px}
+.tip dl{display:grid;grid-template-columns:max-content 1fr;gap:2px 18px;border-top:1px solid var(--tip-bd);padding-top:8px}
+.tip dt{color:var(--ink-2)}.tip dd{text-align:right;font-weight:600}
+.tip dd.hot{color:var(--hot)}
+
+.grid{width:100%;border-collapse:collapse;font-size:16px;line-height:1.45}
+.grid th,.grid td{text-align:left;vertical-align:top;padding:9px 18px 9px 0}
+.grid th{font-weight:600;color:var(--ink-2);border-bottom:2px solid var(--ink);white-space:nowrap;font-size:14px}
+.grid td{border-bottom:1px solid var(--rule)}
+.grid th:last-child,.grid td:last-child{padding-right:0}
+.grid .num{text-align:right;white-space:nowrap}
+.grid .strong{font-weight:600}.grid .muted{color:var(--ink-2)}
+.chip{display:inline-block;padding:1px 8px;border-radius:3px;border:1px solid var(--rule);font-size:15px;margin:2px 4px 2px 0}
+.chip.sql{border-color:transparent;background:color-mix(in srgb,var(--hot) 14%,transparent);color:var(--hot)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:20px clamp(24px,5vw,64px)}
+.footer{border-top:1px solid var(--rule);padding-block:20px 40px;font-size:15px;color:var(--ink-2)}
+.footer .page{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px 24px}
+
+@media (max-width:720px){
+  .plan svg{display:none}
+  .plan-list{display:block;border-left:2px solid var(--arrow);margin-left:8px;padding-left:16px}
+  .plan-list li{padding:6px 0;font-size:16px}
+  .plan-list li b{font-weight:600}.plan-list li span{color:var(--ink-2)}.plan-list li i{font-style:normal;color:var(--hot);font-weight:600}
+  .two{grid-template-columns:1fr}
+  .grid.stack thead{display:none}
+  .grid.stack,.grid.stack tbody,.grid.stack tr{display:block}
+  .grid.stack tr{padding:10px 0;border-bottom:1px solid var(--rule)}
+  .grid.stack tr:first-child{border-top:2px solid var(--ink)}
+  .grid.stack td{display:grid;grid-template-columns:90px 1fr;gap:12px;padding:3px 0;border:0}
+  .grid.stack td::before{content:attr(data-label);font-size:13px;color:var(--ink-3);padding-top:3px}
+  .grid.stack td.num{text-align:left}
+  .nav .page{flex-wrap:wrap;padding-block:10px}.nav-links{width:100%;margin-left:0}
+}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="page"><a href="#top" style="text-decoration:none"><b>PalmaLuv</b> <span>/ Alexander Kolyasa</span></a>
+<div class="nav-links"><a href="#experience">Experience</a><a href="#skills">Skills</a><a href="#projects">Projects</a><a href="#contact">Contact</a></div></div></nav>
+
+<main id="top">
+<section class="hero page">
+  <h1>Alexander Kolyasa</h1>
+  <p class="sub">Online as <b>PalmaLuv</b>. .NET and T-SQL developer in Dnipro, Ukraine. Open to work. Below is the execution plan for this page: read it right to left, the way SQL Server draws it, and click any operator.</p>
+  <div class="querybar"><span class="kw">SELECT</span> * <span class="kw">FROM</span> Developers d <span class="kw">JOIN</span> Experience e <span class="kw">ON</span> e.dev = d.id <span class="kw">JOIN</span> Skills s <span class="kw">ON</span> s.dev = d.id <span class="kw">JOIN</span> Projects p <span class="kw">ON</span> p.dev = d.id <span class="kw">JOIN</span> LeetCode l <span class="kw">ON</span> l.dev = d.id <span class="kw">WHERE</span> d.handle = 'PalmaLuv'</div>
+
+  <div class="plan">
+    <svg viewBox="0 0 900 400" role="img" aria-label="Execution plan: four scans feed two joins, which feed SELECT">
+      <defs><marker id="ah" markerWidth="8" markerHeight="8" refX="1" refY="4" orient="auto"><path class="head" d="M8,0 L0,4 L8,8 Z"/></marker></defs>
+
+      <!-- arrows: child to parent, width follows row count -->
+      <path class="arrow" d="M600,86 H420" stroke-width="2" marker-end="url(#ah)"/>
+      <path class="arrow" d="M600,176 H470 V126 H420" stroke-width="5" marker-end="url(#ah)"/>
+      <path class="arrow" d="M600,270 H420" stroke-width="3.5" marker-end="url(#ah)"/>
+      <path class="arrow" d="M600,352 H470 V300 H420" stroke-width="2.5" marker-end="url(#ah)"/>
+      <path class="arrow" d="M330,110 H240 V190 H170" stroke-width="5" marker-end="url(#ah)"/>
+      <path class="arrow" d="M330,285 H240 V210 H170" stroke-width="3.5" marker-end="url(#ah)"/>
+
+      <!-- SELECT -->
+      <a class="op" href="#top"><rect x="60" y="164" width="110" height="72" rx="3"/>
+        <path class="glyph" d="M98,181 h34 M98,190 h34 M98,199 h20"/>
+        <text class="name" x="115" y="220" text-anchor="middle">SELECT</text>
+        <text class="cost" x="115" y="234" text-anchor="middle">Cost: 0 %</text></a>
+
+      <!-- Hash Match -->
+      <a class="op" href="#experience"><rect x="330" y="66" width="90" height="92" rx="3"/>
+        <path class="glyph" d="M362,84 v22 M382,84 v22 M355,91 h34 M355,99 h34"/>
+        <text class="name" x="375" y="126" text-anchor="middle">Hash Match</text>
+        <text class="obj" x="375" y="140" text-anchor="middle">(Inner Join)</text>
+        <text class="cost" x="375" y="153" text-anchor="middle">Cost: 7 %</text></a>
+
+      <!-- Nested Loops -->
+      <a class="op" href="#projects"><rect x="330" y="240" width="90" height="92" rx="3"/>
+        <path class="glyph" d="M360,258 a10,10 0 1,0 0.1,0 M380,266 a10,10 0 1,0 0.1,0"/>
+        <text class="name" x="375" y="300" text-anchor="middle">Nested Loops</text>
+        <text class="obj" x="375" y="314" text-anchor="middle">(Inner Join)</text>
+        <text class="cost" x="375" y="327" text-anchor="middle">Cost: 5 %</text></a>
+
+      <!-- Leaves -->
+      <a class="op" href="#top"><rect x="600" y="52" width="230" height="68" rx="3"/>
+        <path class="glyph" d="M616,68 h20 v20 h-20 z M620,76 h12 M620,82 h8"/>
+        <text class="name" x="648" y="76">Clustered Index Seek</text>
+        <text class="obj" x="648" y="92">[dbo].[Developers].[PK_Handle]</text>
+        <text class="cost" x="648" y="108">Cost: 1 %</text></a>
+
+      <a class="op" href="#experience"><rect x="600" y="142" width="230" height="68" rx="3"/>
+        <path class="glyph" d="M616,158 h20 v20 h-20 z M616,166 h20 M616,172 h20"/>
+        <text class="name" x="648" y="166">Clustered Index Scan</text>
+        <text class="obj" x="648" y="182">[dbo].[Experience]</text>
+        <text class="cost hot" x="648" y="198">Cost: 41 %</text></a>
+
+      <a class="op" href="#skills"><rect x="600" y="236" width="230" height="68" rx="3"/>
+        <path class="glyph" d="M616,252 h20 v20 h-20 z M620,260 h12 M620,266 h8"/>
+        <text class="name" x="648" y="260">Index Seek</text>
+        <text class="obj" x="648" y="276">[dbo].[Skills].[IX_Family]</text>
+        <text class="cost" x="648" y="292">Cost: 22 %</text></a>
+
+      <a class="op" href="#projects"><rect x="600" y="318" width="230" height="68" rx="3"/>
+        <path class="glyph" d="M616,334 h20 v20 h-20 z M616,342 h20 M616,348 h20"/>
+        <text class="name" x="648" y="342">Table Scan</text>
+        <text class="obj" x="648" y="358">[dbo].[Projects], [dbo].[LeetCode]</text>
+        <text class="cost" x="648" y="374">Cost: 24 %</text></a>
+    </svg>
+    <ul class="plan-list">
+      <li><b>SELECT</b> <span>Cost 0 %</span></li>
+      <li><b>Hash Match</b> <span>(Inner Join), 7 %</span></li>
+      <li><b>Clustered Index Scan</b> <span>[Experience]</span> <i>41 %</i> <a href="#experience">open</a></li>
+      <li><b>Index Seek</b> <span>[Skills]</span> 22 % <a href="#skills">open</a></li>
+      <li><b>Nested Loops</b> <span>(Inner Join), 5 %</span></li>
+      <li><b>Table Scan</b> <span>[Projects], [LeetCode]</span> 24 % <a href="#projects">open</a></li>
+      <li><b>Clustered Index Seek</b> <span>[Developers]</span> 1 %</li>
+    </ul>
+    <p class="plan-note">Cost is the share of this page each branch takes. Arrow width follows the number of rows: Experience is thin but heavy, Skills is the widest stream.</p>
+  </div>
+</section>
+
+<section class="section" id="experience"><div class="page">
+  <div class="tip">
+    <h2>Clustered Index Scan</h2>
+    <p>Scanning the whole table: two rows, both worth reading in full.</p>
+    <dl><dt>Physical Operation</dt><dd>Clustered Index Scan</dd><dt>Object</dt><dd>[dbo].[Experience]</dd><dt>Estimated Number of Rows</dt><dd>2</dd><dt>Estimated Operator Cost</dt><dd class="hot">41 %</dd></dl>
+  </div>
+  <table class="grid stack"><thead><tr><th>Period</th><th>Role</th><th>Where</th><th>What I did</th></tr></thead><tbody>
+    <tr><td data-label="Period" class="strong">2022 – now</td><td data-label="Role" class="strong">SQL developer, .NET developer</td><td data-label="Where">Medical Plaza, Dnipro</td><td data-label="What I did">T-SQL queries, stored procedures and functions for the clinic database. Data integrity and query tuning. REST API integrations. Internal web tools and data analysis. Network support: TCP/IP, DNS, DHCP.</td></tr>
+    <tr><td data-label="Period" class="strong">2020 – 2024</td><td data-label="Role" class="strong">Student, .NET development</td><td data-label="Where">Donbas State Engineering Academy</td><td data-label="What I did">C#, WPF, WinForms and ASP.NET through coursework and lab projects. Algorithms, databases, networks.</td></tr>
+  </tbody></table>
+</div></section>
+
+<section class="section" id="skills"><div class="page">
+  <div class="tip">
+    <h2>Index Seek</h2>
+    <p>Seek on family: the SQL Server rows come first, the rest follow.</p>
+    <dl><dt>Physical Operation</dt><dd>Index Seek</dd><dt>Object</dt><dd>[dbo].[Skills].[IX_Family]</dd><dt>Estimated Number of Rows</dt><dd>21</dd><dt>Estimated Operator Cost</dt><dd>22 %</dd></dl>
+  </div>
+  <table class="grid stack"><thead><tr><th>Group</th><th>Tools</th></tr></thead><tbody>
+    <tr><td data-label="Group" class="strong">Languages</td><td data-label="Tools"><span class="chip">C#</span><span class="chip sql">T-SQL</span><span class="chip">C</span><span class="chip">C++</span><span class="chip">Python</span><span class="chip">JavaScript</span><span class="chip">Lua</span></td></tr>
+    <tr><td data-label="Group" class="strong">Frameworks</td><td data-label="Tools"><span class="chip">.NET Core</span><span class="chip">ASP.NET</span><span class="chip">WPF</span><span class="chip">WinForms</span><span class="chip">Docker</span></td></tr>
+    <tr><td data-label="Group" class="strong">Databases</td><td data-label="Tools"><span class="chip sql">MS SQL Server</span><span class="chip sql">SQL Profiler</span><span class="chip">PostgreSQL</span><span class="chip">MySQL</span><span class="chip">Microsoft Access</span></td></tr>
+    <tr><td data-label="Group" class="strong">Tooling</td><td data-label="Tools"><span class="chip">Git</span><span class="chip">Linux</span><span class="chip">REST APIs</span><span class="chip">TCP/IP, DNS, DHCP</span></td></tr>
+  </tbody></table>
+</div></section>
+
+<section class="section" id="projects"><div class="page">
+  <div class="tip">
+    <h2>Table Scan</h2>
+    <p>No index on Projects: every repository gets read.</p>
+    <dl><dt>Physical Operation</dt><dd>Table Scan</dd><dt>Object</dt><dd>[dbo].[Projects]</dd><dt>Estimated Number of Rows</dt><dd>6</dd><dt>Estimated Operator Cost</dt><dd>19 %</dd></dl>
+  </div>
+  <table class="grid stack"><thead><tr><th>Repository</th><th>Language</th><th class="num">Stars</th><th>About</th></tr></thead><tbody>
+    <tr><td data-label="Repository"><a href="https://github.com/PalmaLuv/SteamGiftBot">SteamGiftBot</a></td><td data-label="Language" class="muted">Python</td><td data-label="Stars" class="num">35</td><td data-label="About">Automates your actions on SteamGifts: turn it on and let it enter giveaways for you.</td></tr>
+    <tr><td data-label="Repository"><a href="https://github.com/PalmaLuv/ASCII-Image-art">ASCII-Image-art</a></td><td data-label="Language" class="muted">Release build</td><td data-label="Stars" class="num">7</td><td data-label="About">Turns an image into ASCII art.</td></tr>
+    <tr><td data-label="Repository"><a href="https://github.com/Blockify-Launcher/Blockify-Launcher">Blockify-Launcher</a></td><td data-label="Language" class="muted">C#</td><td data-label="Stars" class="num">3</td><td data-label="About">Launcher built under the Blockify-Launcher organisation, with a shared library, BlockifyLib.</td></tr>
+    <tr><td data-label="Repository"><a href="https://github.com/PalmaLuv/DES-Encryptor">DES-Encryptor</a></td><td data-label="Language" class="muted">C#</td><td data-label="Stars" class="num">2</td><td data-label="About">DES encryption and decryption. Course work.</td></tr>
+    <tr><td data-label="Repository"><a href="https://github.com/PalmaLuv/WPFConverterMoney">WPFConverterMoney</a></td><td data-label="Language" class="muted">C#</td><td data-label="Stars" class="num">0</td><td data-label="About">Currency and cryptocurrency converter in WPF, on the CoinCap API 2.0.</td></tr>
+    <tr><td data-label="Repository"><a href="https://github.com/PalmaLuv/SnakeGame">SnakeGame</a></td><td data-label="Language" class="muted">C++</td><td data-label="Stars" class="num">1</td><td data-label="About">Snake, written in C++.</td></tr>
+  </tbody></table>
+</div></section>
+
+<section class="section" id="leetcode"><div class="page">
+  <div class="tip">
+    <h2>Table Scan</h2>
+    <p>Small table, mostly the database track. As of September 2026, from <a href="https://leetcode.com/u/mrkyt875/">leetcode.com/u/mrkyt875</a>.</p>
+    <dl><dt>Physical Operation</dt><dd>Table Scan</dd><dt>Object</dt><dd>[dbo].[LeetCode]</dd><dt>Estimated Number of Rows</dt><dd>49</dd><dt>Estimated Operator Cost</dt><dd>5 %</dd></dl>
+  </div>
+  <div class="two">
+    <table class="grid"><thead><tr><th>Language</th><th class="num">Solved</th></tr></thead><tbody><tr><td>MS SQL Server</td><td class="num">26</td></tr><tr><td>C#</td><td class="num">16</td></tr><tr><td>MySQL</td><td class="num">8</td></tr></tbody></table>
+    <table class="grid"><thead><tr><th>Difficulty</th><th class="num">Solved</th></tr></thead><tbody><tr><td>Easy</td><td class="num">33</td></tr><tr><td>Medium</td><td class="num">10</td></tr><tr><td>Hard</td><td class="num">6</td></tr></tbody></table>
+  </div>
+</div></section>
+
+<section class="section" id="contact"><div class="page">
+  <div class="tip">
+    <h2>SELECT</h2>
+    <p>Query completed. Open to full-time roles in Dnipro or remote, and to freelance work. LinkedIn is the quickest.</p>
+    <dl><dt>Physical Operation</dt><dd>SELECT</dd><dt>Estimated Number of Rows</dt><dd>1</dd><dt>Estimated Operator Cost</dt><dd>0 %</dd></dl>
+  </div>
+  <table class="grid" style="max-width:560px"><thead><tr><th>Channel</th><th>Address</th></tr></thead><tbody>
+    <tr><td>LinkedIn</td><td><a href="https://www.linkedin.com/in/palmaluv/">linkedin.com/in/palmaluv</a></td></tr>
+    <tr><td>GitHub</td><td><a href="https://github.com/PalmaLuv">github.com/PalmaLuv</a></td></tr>
+    <tr><td>LeetCode</td><td><a href="https://leetcode.com/u/mrkyt875/">leetcode.com/u/mrkyt875</a></td></tr>
+  </tbody></table>
+</div></section>
+</main>
+<footer class="footer"><div class="page"><p>Alexander Kolyasa, 2026</p><p><a href="https://github.com/PalmaLuv/palma.github.io">Source on GitHub</a></p></div></footer>
+</body>
+</html>

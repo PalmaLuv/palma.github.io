@@ -1,0 +1,112 @@
+{
+  "handle": "PalmaLuv",
+  "name": { "en": "Alexander Kolyasa", "uk": "Олександр Коляса" },
+  "role": { "en": ".NET and T-SQL developer", "uk": "Розробник .NET і T-SQL" },
+  "city": { "en": "Dnipro, Ukraine", "uk": "Дніпро, Україна" },
+  "status": { "en": "Open to work, Dnipro or remote", "uk": "Відкритий до пропозицій, Дніпро або віддалено" },
+  "avatar": "https://avatars.githubusercontent.com/u/84909252?v=4",
+  "site": "https://palmaluv.github.io/palma.github.io/",
+  "repo": "https://github.com/PalmaLuv/palma.github.io",
+  "email": null,
+  "links": [
+    { "label": "GitHub", "url": "https://github.com/PalmaLuv", "icon": "github" },
+    { "label": "LinkedIn", "url": "https://www.linkedin.com/in/palmaluv/", "icon": "linkedin" },
+    { "label": "LeetCode", "url": "https://leetcode.com/u/mrkyt875/", "icon": "leetcode" }
+  ],
+  "headline": {
+    "en": ["Backend on .NET,", "data on", "SQL Server."],
+    "uk": ["Бекенд на .NET,", "дані в", "SQL Server."]
+  },
+  "intro": {
+    "en": "Two years of commercial T-SQL at Medical Plaza, a clinic network in Dnipro. C#, ASP.NET and WPF since 2020.",
+    "uk": "Два роки комерційного T-SQL у Medical Plaza, мережі клінік у Дніпрі. C#, ASP.NET і WPF з 2020 року."
+  },
+  "about": {
+    "en": [
+      "I write backend code in C# and keep the data behind it in order in MS SQL Server. For the last two years that has been commercial T-SQL at Medical Plaza: stored procedures, data integrity, and the REST integrations around them.",
+      "On the .NET side I have built with ASP.NET, WPF and WinForms since 2020, in study projects and my own tools. I like APIs that are boring to call and schemas that do not surprise anyone."
+    ],
+    "uk": [
+      "Пишу бекенд на C# і тримаю дані в порядку в MS SQL Server. Останні два роки — комерційний T-SQL у Medical Plaza: збережені процедури, цілісність даних і REST-інтеграції навколо них.",
+      "На боці .NET — ASP.NET, WPF і WinForms з 2020 року, у навчальних проєктах і власних інструментах. Люблю API, які нудно викликати, і схеми, які нікого не дивують."
+    ]
+  },
+  "focus": [
+    {
+      "name": "T-SQL", "icon": "database",
+      "text": {
+        "en": "Stored procedures and functions, data integrity, query tuning with SQL Profiler. MS SQL Server in production since 2022.",
+        "uk": "Збережені процедури і функції, цілісність даних, оптимізація запитів із SQL Profiler. MS SQL Server у продакшені з 2022 року."
+      }
+    },
+    {
+      "name": ".NET", "icon": "code",
+      "text": {
+        "en": "C# with ASP.NET, WPF and WinForms. REST integrations with outside services, internal web tools.",
+        "uk": "C# з ASP.NET, WPF і WinForms. REST-інтеграції із зовнішніми сервісами, внутрішні веб-інструменти."
+      }
+    }
+  ],
+  "experience": [
+    {
+      "from": 2022, "to": null, "icon": "building",
+      "role": { "en": "SQL developer, .NET developer", "uk": "SQL-розробник, .NET-розробник" },
+      "company": { "en": "Medical Plaza, Dnipro", "uk": "Medical Plaza, Дніпро" },
+      "text": {
+        "en": "T-SQL queries, stored procedures and functions for the clinic database. Data integrity and query tuning. REST API integrations. Internal web tools and data analysis. Network support: TCP/IP, DNS, DHCP.",
+        "uk": "T-SQL-запити, збережені процедури і функції для бази клініки. Цілісність даних і оптимізація запитів. Інтеграції з REST API. Внутрішні веб-інструменти й аналіз даних. Підтримка мережі: TCP/IP, DNS, DHCP."
+      },
+      "tags": ["T-SQL", "MS SQL Server", "REST API", "C# / .NET"],
+      "core": ["T-SQL", "MS SQL Server"]
+    },
+    {
+      "from": 2020, "to": 2024, "icon": "graduation",
+      "role": { "en": "Student, .NET development", "uk": "Студент, розробка на .NET" },
+      "company": { "en": "Donbas State Engineering Academy", "uk": "Донбаська державна машинобудівна академія" },
+      "text": {
+        "en": "C#, WPF, WinForms and ASP.NET through coursework and lab projects, among them a DES encryptor and a set of networking labs. Algorithms, databases, networks.",
+        "uk": "C#, WPF, WinForms і ASP.NET у курсових та лабораторних роботах, серед них DES-шифрувальник і набір мережевих лабораторних. Алгоритми, бази даних, мережі."
+      },
+      "tags": ["C# / .NET", "WPF", "ASP.NET", "SQL"],
+      "core": ["C# / .NET"]
+    }
+  ],
+  "skills": [
+    { "group": { "en": "Languages", "uk": "Мови" }, "items": ["C#*", "T-SQL*", "C", "C++", "Python", "JavaScript", "Lua"] },
+    { "group": { "en": "Frameworks", "uk": "Фреймворки" }, "items": [".NET Core*", "ASP.NET*", "WPF*", "WinForms", "Docker"] },
+    { "group": { "en": "Databases", "uk": "Бази даних" }, "items": ["MS SQL Server*", "SQL Profiler*", "PostgreSQL", "MySQL", "Microsoft Access"] },
+    { "group": { "en": "Tooling", "uk": "Інструменти" }, "items": ["Git", "Linux", "REST APIs", "TCP/IP, DNS, DHCP"] }
+  ],
+  "projects": [
+    {
+      "repo": "PalmaLuv/SteamGiftBot", "name": "SteamGiftBot", "language": "Python", "stars": 35, "icon": "gift",
+      "about": { "en": "Automates your actions on SteamGifts: turn it on and let it enter giveaways for you.", "uk": "Автоматизує дії на SteamGifts: увімкнув — і він сам бере участь у роздачах." },
+      "tags": ["Python", "Steam API"]
+    },
+    {
+      "repo": "PalmaLuv/ASCII-Image-art", "name": "ASCII-Image-art", "language": null, "stars": 7, "icon": "image",
+      "about": { "en": "Turns an image into ASCII art.", "uk": "Перетворює зображення на ASCII-арт." },
+      "tags": ["Release build"]
+    },
+    {
+      "repo": "Blockify-Launcher/Blockify-Launcher", "name": "Blockify-Launcher", "language": "C#", "stars": 3, "icon": "cube",
+      "about": { "en": "Launcher built under the Blockify-Launcher organisation, with a shared library, BlockifyLib.", "uk": "Лаунчер в організації Blockify-Launcher зі спільною бібліотекою BlockifyLib." },
+      "tags": ["C#*"]
+    },
+    {
+      "repo": "PalmaLuv/DES-Encryptor", "name": "DES-Encryptor", "language": "C#", "stars": 2, "icon": "lock",
+      "about": { "en": "DES encryption and decryption. Course work.", "uk": "Шифрування і розшифрування DES. Курсова робота." },
+      "tags": ["C#*"]
+    },
+    {
+      "repo": "PalmaLuv/WPFConverterMoney", "name": "WPFConverterMoney", "language": "C#", "stars": 0, "icon": "swap",
+      "about": { "en": "Currency and cryptocurrency converter in WPF, on the CoinCap API 2.0.", "uk": "Конвертер валют і криптовалют на WPF, на CoinCap API 2.0." },
+      "tags": ["C#*", "WPF*"]
+    },
+    {
+      "repo": "PalmaLuv/SnakeGame", "name": "SnakeGame", "language": "C++", "stars": 1, "icon": "snake",
+      "about": { "en": "Snake, written in C++. A JavaScript remake lives on this site's 404 page.", "uk": "Змійка на C++. Її JavaScript-версія живе на сторінці 404 цього сайту." },
+      "tags": ["C++"]
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Варианты дизайна</title>
+<style>
+:root{color-scheme:light dark}
+body{font-family:system-ui,sans-serif;font-size:17px;line-height:1.55;max-width:760px;margin:0 auto;padding:40px 20px;color:#1a1a1a;background:#fff}
+@media (prefers-color-scheme:dark){body{color:#eaeaea;background:#151515}}
+h1{font-size:1.6rem;margin:0 0 6px}
+p.sub{opacity:.7;margin:0 0 28px}
+ol{padding-left:0;list-style:none;counter-reset:n}
+li{padding:14px 0;border-top:1px solid #8884;display:grid;grid-template-columns:2.2em 1fr;gap:4px 12px}
+li::before{counter-increment:n;content:"0" counter(n);opacity:.5;font-variant-numeric:tabular-nums}
+li a{font-weight:600;font-size:1.05rem;color:inherit}
+li span{grid-column:2;opacity:.8;font-size:15px}
+</style>
+</head>
+<body>
+<h1>Варианты дизайна портфолио</h1>
+<p class="sub">Одни и те же проверенные данные, пять разных решений. Все — светлая + тёмная тема по системной настройке, адаптив до 375 px.</p>
+<ol>
+  <li><a href="00-query-session/index.html">Сессия запроса</a><span>T-SQL-запрос в hero, результат — таблица; каждый раздел — result set. IBM Plex.</span></li>
+  <li><a href="01-er-diagram.html">ER-диаграмма</a><span>Hero — схема базы с таблицами и связями 1:N, клик по таблице ведёт к её строкам.</span></li>
+  <li><a href="02-execution-plan.html">План выполнения</a><span>Страница как execution plan: операторы с процентами стоимости, заголовки разделов — всплывающие подсказки SSMS.</span></li>
+  <li><a href="03-script-results.html">Скрипт ↔ результат</a><span>Переключатель: профиль как T-SQL DDL и INSERT-ы с подсветкой, либо те же данные таблицами.</span></li>
+  <li><a href="04-datasheet.html">Даташит AK-2026</a><span>Паспорт на компонент: features, ratings, characteristics, pin configuration, revision history. Archivo.</span></li>
+  <li><a href="05-editorial.html">Редакционный, Дніпро</a><span>Без метафор: кириллическая типографика Piazzolla + Commissioner, переключатель Укр/Eng, линия реки на полях.</span></li>
+</ol>
+</body>
+</html>

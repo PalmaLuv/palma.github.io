@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Олександр Коляса — CV</title>
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root { --ink:#15181C; --ink-2:#4F5763; --ink-3:#8B93A0; --rule:#D6DAE0; --brand:#E25544; --brand-bg:#FBE6E3; }
+    @page { size: A4; margin: 14mm 16mm; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    body { font-family: 'Manrope', system-ui, sans-serif; font-size: 10.5pt; line-height: 1.45; color: var(--ink); background: #fff; }
+    a { color: inherit; text-decoration: none; }
+    .sheet { max-width: 800px; margin: 0 auto; padding: 32px 24px; }
+    @media print { .sheet { max-width: none; padding: 0; } }
+    .top { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; padding-bottom: 14px; border-bottom: 2px solid var(--ink); }
+    h1 { font-size: 24pt; font-weight: 800; letter-spacing: -.03em; line-height: 1; }
+    .role { font-size: 12pt; font-weight: 600; color: var(--brand); margin-top: 6px; }
+    .city { color: var(--ink-2); margin-top: 4px; }
+    .links { text-align: right; font-size: 9.5pt; color: var(--ink-2); line-height: 1.6; }
+    .links b { display: block; color: var(--ink); font-weight: 600; }
+    h2 { font-size: 9pt; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); margin: 18px 0 8px; padding-bottom: 4px; border-bottom: 1px solid var(--rule); }
+    .about p + p { margin-top: 6px; }
+    .xp { display: grid; grid-template-columns: 78px 1fr; gap: 4px 16px; margin-bottom: 10px; break-inside: avoid; }
+    .xp .when { font-family: 'JetBrains Mono', monospace; font-size: 9pt; color: var(--ink-2); padding-top: 2px; }
+    .xp h3 { font-size: 11pt; font-weight: 700; }
+    .xp .co { color: var(--brand); font-weight: 600; font-size: 10pt; }
+    .xp p { margin-top: 3px; color: var(--ink-2); }
+    .tags { margin-top: 5px; display: flex; flex-wrap: wrap; gap: 4px; }
+    .tag { font-family: 'JetBrains Mono', monospace; font-size: 8.5pt; padding: 1px 7px; border: 1px solid var(--rule); border-radius: 99px; color: var(--ink-2); }
+    .tag.k { background: var(--brand-bg); border-color: transparent; color: var(--brand); }
+    .skills { display: grid; grid-template-columns: 110px 1fr; gap: 4px 16px; }
+    .skills dt { font-weight: 600; }
+    .skills dd { color: var(--ink-2); }
+    .skills dd b { color: var(--ink); font-weight: 600; }
+    .projects { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 20px; }
+    .proj { break-inside: avoid; }
+    .proj b { font-weight: 700; }
+    .proj span { font-family: 'JetBrains Mono', monospace; font-size: 8.5pt; color: var(--ink-3); margin-left: 6px; }
+    .proj p { color: var(--ink-2); font-size: 9.5pt; }
+    .foot { margin-top: 20px; padding-top: 8px; border-top: 1px solid var(--rule); font-size: 8.5pt; color: var(--ink-3); display: flex; justify-content: space-between; gap: 16px; }
+  </style>
+</head>
+<body>
+<div class="sheet">
+  <header class="top">
+    <div>
+      <h1>Олександр Коляса</h1>
+      <div class="role">Розробник .NET і T-SQL</div>
+      <div class="city">Дніпро, Україна</div>
+    </div>
+    <div class="links">
+      <b>GitHub</b>github.com/PalmaLuv<br><b>LinkedIn</b>www.linkedin.com/in/palmaluv<br><b>LeetCode</b>leetcode.com/u/mrkyt875<br><b>Web</b>palmaluv.github.io/palma.github.io
+    </div>
+  </header>
+
+  <section class="about">
+    <h2>Розробник .NET і T-SQL</h2>
+    <p>Пишу бекенд на C# і тримаю дані в порядку в MS SQL Server. Останні два роки — комерційний T-SQL у Medical Plaza: збережені процедури, цілісність даних і REST-інтеграції навколо них.</p><p>На боці .NET — ASP.NET, WPF і WinForms з 2020 року, у навчальних проєктах і власних інструментах. Люблю API, які нудно викликати, і схеми, які нікого не дивують.</p>
+  </section>
+
+  <h2>Досвід</h2>
+  <div class="xp"><div class="when">2022 – дотепер</div><div><h3>SQL-розробник, .NET-розробник</h3><div class="co">Medical Plaza, Дніпро</div><p>T-SQL-запити, збережені процедури і функції для бази клініки. Цілісність даних і оптимізація запитів. Інтеграції з REST API. Внутрішні веб-інструменти й аналіз даних. Підтримка мережі: TCP/IP, DNS, DHCP.</p><div class="tags"><span class="tag k">T-SQL</span><span class="tag k">MS SQL Server</span><span class="tag">REST API</span><span class="tag">C# / .NET</span></div></div></div>
+
+  <h2>Освіта</h2>
+  <div class="xp"><div class="when">2020 – 2024</div><div><h3>Студент, розробка на .NET</h3><div class="co">Донбаська державна машинобудівна академія</div><p>C#, WPF, WinForms і ASP.NET у курсових та лабораторних роботах, серед них DES-шифрувальник і набір мережевих лабораторних. Алгоритми, бази даних, мережі.</p><div class="tags"><span class="tag k">C# / .NET</span><span class="tag">WPF</span><span class="tag">ASP.NET</span><span class="tag">SQL</span></div></div></div>
+
+  <h2>Навички</h2>
+  <dl class="skills">
+    <dt>Мови</dt><dd><b>C#</b>, <b>T-SQL</b>, C, C++, Python, JavaScript, Lua</dd><dt>Фреймворки</dt><dd><b>.NET Core</b>, <b>ASP.NET</b>, <b>WPF</b>, WinForms, Docker</dd><dt>Бази даних</dt><dd><b>MS SQL Server</b>, <b>SQL Profiler</b>, PostgreSQL, MySQL, Microsoft Access</dd><dt>Інструменти</dt><dd>Git, Linux, REST APIs, TCP/IP, DNS, DHCP</dd>
+  </dl>
+
+  <h2>Вибрані проєкти</h2>
+  <div class="projects">
+    <div class="proj"><b>SteamGiftBot</b><span>Python · 35 ★</span><p>Автоматизує дії на SteamGifts: увімкнув — і він сам бере участь у роздачах.</p></div><div class="proj"><b>ASCII-Image-art</b><span>7 ★</span><p>Перетворює зображення на ASCII-арт.</p></div><div class="proj"><b>Blockify-Launcher</b><span>C# · 3 ★</span><p>Лаунчер в організації Blockify-Launcher зі спільною бібліотекою BlockifyLib.</p></div><div class="proj"><b>DES-Encryptor</b><span>C# · 2 ★</span><p>Шифрування і розшифрування DES. Курсова робота.</p></div>
+  </div>
+
+  <footer class="foot">
+    <span>Згенеровано з тих самих даних, що й сайт, https://palmaluv.github.io/palma.github.io/</span>
+    <span>LeetCode: 49 solved, 26 in MS SQL Server</span>
+  </footer>
+</div>
+</body>
+</html>

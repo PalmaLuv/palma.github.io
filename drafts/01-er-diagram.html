@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alexander Kolyasa — schema</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F4F5F7; --ink:#1B1F24; --ink-2:#5A636E; --ink-3:#8B95A1;
+  --rule:#C9CFD6; --head:#DEE3EA; --box:#FFFFFF; --line:#6B7683; --key:#0B7A75; --key-soft:#D7EEEC;
+  --sans:'IBM Plex Sans',system-ui,sans-serif; --mono:'IBM Plex Mono',ui-monospace,Consolas,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root{
+  --paper:#171B20; --ink:#E7EAEE; --ink-2:#A7B0BA; --ink-3:#6F7985;
+  --rule:#333B45; --head:#2A313A; --box:#1F252C; --line:#8391A0; --key:#5FC9C3; --key-soft:#173A38;
+  color-scheme:dark;
+}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);font-size:17px;line-height:1.6;color:var(--ink);background:var(--paper);font-variant-numeric:tabular-nums}
+a{color:inherit;text-decoration:underline;text-decoration-color:var(--rule);text-underline-offset:.18em}
+a:hover{text-decoration-color:currentColor}
+:focus-visible{outline:2px solid var(--key);outline-offset:3px}
+ul{list-style:none}
+.page{width:min(100% - 2*clamp(16px,4vw,48px),1040px);margin-inline:auto}
+
+.nav{border-bottom:1px solid var(--rule)}
+.nav .page{display:flex;align-items:center;gap:24px;min-height:58px;font-size:15px}
+.nav b{font-weight:600}
+.nav span{color:var(--ink-3);font-weight:400}
+.nav-links{display:flex;gap:20px;margin-left:auto}
+.nav-links a{text-decoration:none;color:var(--ink-2)}
+
+.hero{padding-block:clamp(40px,6vw,72px) 24px}
+.hero h1{font-size:clamp(2rem,4.6vw,3.2rem);font-weight:600;line-height:1.1;letter-spacing:-.01em}
+.hero .sub{color:var(--ink-2);margin-top:8px;max-width:60ch}
+.hero .sub b{font-weight:500;color:var(--ink)}
+
+/* diagram */
+.erd{margin-top:clamp(24px,4vw,40px)}
+.erd svg{width:100%;height:auto;display:block;font-family:var(--mono);font-size:12.5px}
+.erd .box rect.body{fill:var(--box);stroke:var(--line);stroke-width:1}
+.erd .box rect.head{fill:var(--head)}
+.erd .box .title{font-family:var(--sans);font-weight:600;font-size:14px;fill:var(--ink)}
+.erd .box text{fill:var(--ink)}
+.erd .box .k{fill:var(--key);font-weight:500}
+.erd .box .t{fill:var(--ink-3)}
+.erd .box:hover rect.body{stroke:var(--key);stroke-width:1.5}
+.erd .rel{fill:none;stroke:var(--line);stroke-width:1.25}
+.erd .card{fill:var(--paper);stroke:none}
+.erd .cardt{fill:var(--ink-2);font-size:11px}
+.erd-note{font-size:14px;color:var(--ink-2);margin-top:10px}
+.erd-list{display:none}
+
+.section{padding-block:clamp(32px,5vw,56px);border-top:1px solid var(--rule)}
+.section h2{font-size:1.5rem;font-weight:600;line-height:1.15;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.section h2 code{font-family:var(--mono);font-size:14px;font-weight:400;color:var(--ink-2)}
+.section .lede{color:var(--ink-2);max-width:62ch;margin:6px 0 20px}
+
+.grid{width:100%;border-collapse:collapse;font-size:15px;line-height:1.5}
+.grid th,.grid td{text-align:left;vertical-align:top;padding:10px 18px 10px 0}
+.grid th{font-family:var(--mono);font-weight:400;font-size:13px;color:var(--ink-2);border-bottom:2px solid var(--ink);white-space:nowrap}
+.grid th .k{color:var(--key);font-weight:500}
+.grid td{border-bottom:1px solid var(--rule)}
+.grid th:last-child,.grid td:last-child{padding-right:0}
+.grid .num{text-align:right;white-space:nowrap}
+.grid .strong{font-weight:500}
+.grid .muted{color:var(--ink-2)}
+.chip{display:inline-block;padding:1px 8px;border-radius:3px;border:1px solid var(--rule);font-size:14px;margin:2px 4px 2px 0}
+.chip.sql{background:var(--key-soft);border-color:transparent;color:var(--key)}
+.status{display:inline-block;padding:1px 8px;border-radius:3px;background:var(--key-soft);color:var(--key);font-weight:500;font-size:14px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:20px clamp(24px,5vw,64px)}
+.footer{border-top:1px solid var(--rule);padding-block:20px 40px;font-size:14px;color:var(--ink-2)}
+.footer .page{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px 24px}
+
+@media (max-width:720px){
+  .erd svg{display:none}
+  .erd-list{display:grid;gap:10px}
+  .erd-list li a{display:block;text-decoration:none;background:var(--box);border:1px solid var(--line);padding:10px 14px}
+  .erd-list li a b{display:block;font-weight:600;font-size:15px}
+  .erd-list li a span{font-family:var(--mono);font-size:12.5px;color:var(--ink-2)}
+  .erd-list li a i{font-style:normal;color:var(--key)}
+  .two{grid-template-columns:1fr}
+  .grid.stack thead{display:none}
+  .grid.stack,.grid.stack tbody,.grid.stack tr{display:block}
+  .grid.stack tr{padding:10px 0;border-bottom:1px solid var(--rule)}
+  .grid.stack tr:first-child{border-top:2px solid var(--ink)}
+  .grid.stack td{display:grid;grid-template-columns:96px 1fr;gap:12px;padding:3px 0;border:0}
+  .grid.stack td::before{content:attr(data-label);font-family:var(--mono);font-size:12.5px;color:var(--ink-3);padding-top:3px}
+  .grid.stack td.num{text-align:left}
+  .nav .page{flex-wrap:wrap;padding-block:10px}
+  .nav-links{width:100%;margin-left:0}
+}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="page"><a href="#top" style="text-decoration:none"><b>PalmaLuv</b> <span>/ Alexander Kolyasa</span></a>
+<div class="nav-links"><a href="#experience">Experience</a><a href="#skills">Skills</a><a href="#projects">Projects</a><a href="#contact">Contact</a></div></div></nav>
+
+<main id="top">
+<section class="hero page">
+  <h1>Alexander Kolyasa</h1>
+  <p class="sub">Online as <b>PalmaLuv</b>. .NET and T-SQL developer in Dnipro, Ukraine, <span class="status">open to work</span>. Here is the schema; the data is below.</p>
+
+  <div class="erd">
+    <svg viewBox="0 0 900 372" role="img" aria-label="Database diagram: Developer has many Experience, Skill, Project and LeetCode rows">
+      <defs>
+        <marker id="one" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M6,0 V10" stroke="var(--line)" stroke-width="1.25"/></marker>
+        <marker id="many" markerWidth="12" markerHeight="12" refX="11" refY="6" orient="auto"><path d="M0,6 L11,0 M0,6 L11,6 M0,6 L11,12" fill="none" stroke="var(--line)" stroke-width="1.25"/></marker>
+      </defs>
+
+      <!-- relations -->
+      <path class="rel" d="M240,102 H360" marker-start="url(#one)" marker-end="url(#many)"/>
+      <path class="rel" d="M240,150 H300 V282 H360" marker-start="url(#one)" marker-end="url(#many)"/>
+      <path class="rel" d="M140,184 V240" marker-start="url(#one)" marker-end="url(#many)"/>
+      <path class="rel" d="M200,60 V16 H760 V40" marker-start="url(#one)" marker-end="url(#many)"/>
+      <rect class="card" x="266" y="94" width="30" height="16"/><text class="cardt" x="281" y="106" text-anchor="middle">1:N</text>
+      <rect class="card" x="325" y="274" width="30" height="16"/><text class="cardt" x="340" y="286" text-anchor="middle">1:N</text>
+      <rect class="card" x="148" y="204" width="30" height="16"/><text class="cardt" x="163" y="216" text-anchor="middle">1:N</text>
+      <rect class="card" x="465" y="8" width="30" height="16"/><text class="cardt" x="480" y="20" text-anchor="middle">1:N</text>
+
+      <!-- Developer -->
+      <a class="box" href="#top"><rect class="body" x="40" y="60" width="200" height="124"/><rect class="head" x="40.5" y="60.5" width="199" height="24"/>
+        <text class="title" x="50" y="77">Developer</text>
+        <text x="50" y="102"><tspan class="k">PK</tspan>  id</text><text class="t" x="230" y="102" text-anchor="end">int</text>
+        <text x="50" y="122">    name</text><text class="t" x="230" y="122" text-anchor="end">nvarchar</text>
+        <text x="50" y="142">    handle</text><text class="t" x="230" y="142" text-anchor="end">nvarchar</text>
+        <text x="50" y="162">    city</text><text class="t" x="230" y="162" text-anchor="end">nvarchar</text>
+        <text x="50" y="180">    status</text><text class="t" x="230" y="180" text-anchor="end">nvarchar</text></a>
+
+      <!-- Experience -->
+      <a class="box" href="#experience"><rect class="body" x="360" y="40" width="200" height="124"/><rect class="head" x="360.5" y="40.5" width="199" height="24"/>
+        <text class="title" x="370" y="57">Experience</text>
+        <text x="370" y="82"><tspan class="k">PK</tspan>  id</text>
+        <text x="370" y="102"><tspan class="k">FK</tspan>  developer_id</text>
+        <text x="370" y="122">    company</text>
+        <text x="370" y="142">    role</text>
+        <text x="370" y="160">    period</text></a>
+
+      <!-- Skill -->
+      <a class="box" href="#skills"><rect class="body" x="360" y="220" width="200" height="124"/><rect class="head" x="360.5" y="220.5" width="199" height="24"/>
+        <text class="title" x="370" y="237">Skill</text>
+        <text x="370" y="262"><tspan class="k">PK</tspan>  id</text>
+        <text x="370" y="282"><tspan class="k">FK</tspan>  developer_id</text>
+        <text x="370" y="302">    group_name</text>
+        <text x="370" y="322">    name</text>
+        <text x="370" y="340">    family</text></a>
+
+      <!-- Project -->
+      <a class="box" href="#projects"><rect class="body" x="660" y="40" width="200" height="124"/><rect class="head" x="660.5" y="40.5" width="199" height="24"/>
+        <text class="title" x="670" y="57">Project</text>
+        <text x="670" y="82"><tspan class="k">PK</tspan>  id</text>
+        <text x="670" y="102"><tspan class="k">FK</tspan>  developer_id</text>
+        <text x="670" y="122">    repo</text>
+        <text x="670" y="142">    language</text>
+        <text x="670" y="160">    stars</text></a>
+
+      <!-- LeetCode -->
+      <a class="box" href="#leetcode"><rect class="body" x="40" y="240" width="200" height="104"/><rect class="head" x="40.5" y="240.5" width="199" height="24"/>
+        <text class="title" x="50" y="257">LeetCode</text>
+        <text x="50" y="282"><tspan class="k">PK</tspan>  id</text>
+        <text x="50" y="302"><tspan class="k">FK</tspan>  developer_id</text>
+        <text x="50" y="322">    language</text>
+        <text x="50" y="340">    solved</text></a>
+
+      <!-- Contact, unlinked leaf -->
+      <a class="box" href="#contact"><rect class="body" x="660" y="220" width="200" height="84"/><rect class="head" x="660.5" y="220.5" width="199" height="24"/>
+        <text class="title" x="670" y="237">Contact</text>
+        <text x="670" y="262"><tspan class="k">PK</tspan>  channel</text>
+        <text x="670" y="282">    url</text>
+        <text class="t" x="670" y="300">3 rows</text></a>
+      <path class="rel" d="M760,164 V220" marker-start="url(#one)" marker-end="url(#many)"/>
+    </svg>
+    <ul class="erd-list">
+      <li><a href="#experience"><b>Experience</b><span><i>FK</i> developer_id, company, role, period</span></a></li>
+      <li><a href="#skills"><b>Skill</b><span><i>FK</i> developer_id, group_name, name, family</span></a></li>
+      <li><a href="#projects"><b>Project</b><span><i>FK</i> developer_id, repo, language, stars</span></a></li>
+      <li><a href="#leetcode"><b>LeetCode</b><span><i>FK</i> developer_id, language, solved</span></a></li>
+      <li><a href="#contact"><b>Contact</b><span><i>PK</i> channel, url</span></a></li>
+    </ul>
+    <p class="erd-note">Click a table to jump to its rows. Every table hangs off Developer, which has exactly one row.</p>
+  </div>
+</section>
+
+<section class="section" id="experience"><div class="page">
+  <h2>Experience <code>SELECT * FROM Experience ORDER BY period DESC</code></h2>
+  <p class="lede">I write backend code in C# and keep the data behind it in order in MS SQL Server. For the last two years that has been commercial T-SQL at Medical Plaza, a clinic network in Dnipro.</p>
+  <table class="grid stack"><thead><tr><th>period</th><th>role</th><th>company</th><th>notes</th></tr></thead><tbody>
+    <tr><td data-label="period" class="strong">2022 – now</td><td data-label="role" class="strong">SQL developer, .NET developer</td><td data-label="company"><div>Medical Plaza, Dnipro</div></td><td data-label="notes">T-SQL queries, stored procedures and functions for the clinic database. Data integrity and query tuning. REST API integrations. Internal web tools and data analysis. Network support: TCP/IP, DNS, DHCP.</td></tr>
+    <tr><td data-label="period" class="strong">2020 – 2024</td><td data-label="role" class="strong">Student, .NET development</td><td data-label="company"><div>Donbas State Engineering Academy</div></td><td data-label="notes">C#, WPF, WinForms and ASP.NET through coursework and lab projects. Algorithms, databases, networks.</td></tr>
+  </tbody></table>
+</div></section>
+
+<section class="section" id="skills"><div class="page">
+  <h2>Skill <code>GROUP BY group_name</code></h2>
+  <p class="lede">Teal marks the SQL Server family, which is where most of the commercial hours went.</p>
+  <table class="grid stack"><thead><tr><th>group_name</th><th>name</th></tr></thead><tbody>
+    <tr><td data-label="group_name" class="strong">Languages</td><td data-label="name"><span class="chip">C#</span><span class="chip sql">T-SQL</span><span class="chip">C</span><span class="chip">C++</span><span class="chip">Python</span><span class="chip">JavaScript</span><span class="chip">Lua</span></td></tr>
+    <tr><td data-label="group_name" class="strong">Frameworks</td><td data-label="name"><span class="chip">.NET Core</span><span class="chip">ASP.NET</span><span class="chip">WPF</span><span class="chip">WinForms</span><span class="chip">Docker</span></td></tr>
+    <tr><td data-label="group_name" class="strong">Databases</td><td data-label="name"><span class="chip sql">MS SQL Server</span><span class="chip sql">SQL Profiler</span><span class="chip">PostgreSQL</span><span class="chip">MySQL</span><span class="chip">Microsoft Access</span></td></tr>
+    <tr><td data-label="group_name" class="strong">Tooling</td><td data-label="name"><span class="chip">Git</span><span class="chip">Linux</span><span class="chip">REST APIs</span><span class="chip">TCP/IP, DNS, DHCP</span></td></tr>
+  </tbody></table>
+</div></section>
+
+<section class="section" id="projects"><div class="page">
+  <h2>Project <code>ORDER BY last_push DESC</code></h2>
+  <p class="lede">Public repositories on GitHub.</p>
+  <table class="grid stack"><thead><tr><th>repo</th><th>language</th><th class="num">stars</th><th>about</th></tr></thead><tbody>
+    <tr><td data-label="repo"><a href="https://github.com/PalmaLuv/SteamGiftBot">SteamGiftBot</a></td><td data-label="language" class="muted">Python</td><td data-label="stars" class="num">35</td><td data-label="about">Automates your actions on SteamGifts: turn it on and let it enter giveaways for you.</td></tr>
+    <tr><td data-label="repo"><a href="https://github.com/PalmaLuv/ASCII-Image-art">ASCII-Image-art</a></td><td data-label="language" class="muted">Release build</td><td data-label="stars" class="num">7</td><td data-label="about">Turns an image into ASCII art.</td></tr>
+    <tr><td data-label="repo"><a href="https://github.com/Blockify-Launcher/Blockify-Launcher">Blockify-Launcher</a></td><td data-label="language" class="muted">C#</td><td data-label="stars" class="num">3</td><td data-label="about">Launcher built under the Blockify-Launcher organisation, with a shared library, BlockifyLib.</td></tr>
+    <tr><td data-label="repo"><a href="https://github.com/PalmaLuv/DES-Encryptor">DES-Encryptor</a></td><td data-label="language" class="muted">C#</td><td data-label="stars" class="num">2</td><td data-label="about">DES encryption and decryption. Course work.</td></tr>
+    <tr><td data-label="repo"><a href="https://github.com/PalmaLuv/WPFConverterMoney">WPFConverterMoney</a></td><td data-label="language" class="muted">C#</td><td data-label="stars" class="num">0</td><td data-label="about">Currency and cryptocurrency converter in WPF, on the CoinCap API 2.0.</td></tr>
+    <tr><td data-label="repo"><a href="https://github.com/PalmaLuv/SnakeGame">SnakeGame</a></td><td data-label="language" class="muted">C++</td><td data-label="stars" class="num">1</td><td data-label="about">Snake, written in C++.</td></tr>
+  </tbody></table>
+</div></section>
+
+<section class="section" id="leetcode"><div class="page">
+  <h2>LeetCode <code>SUM(solved) = 49</code></h2>
+  <p class="lede">Mostly the database track. Numbers as of September 2026, from <a href="https://leetcode.com/u/mrkyt875/">leetcode.com/u/mrkyt875</a>.</p>
+  <div class="two">
+    <table class="grid"><thead><tr><th>language</th><th class="num">solved</th></tr></thead><tbody><tr><td>MS SQL Server</td><td class="num">26</td></tr><tr><td>C#</td><td class="num">16</td></tr><tr><td>MySQL</td><td class="num">8</td></tr></tbody></table>
+    <table class="grid"><thead><tr><th>difficulty</th><th class="num">solved</th></tr></thead><tbody><tr><td>Easy</td><td class="num">33</td></tr><tr><td>Medium</td><td class="num">10</td></tr><tr><td>Hard</td><td class="num">6</td></tr></tbody></table>
+  </div>
+</div></section>
+
+<section class="section" id="contact"><div class="page">
+  <h2>Contact <code>3 rows</code></h2>
+  <p class="lede">Open to full-time roles in Dnipro or remote, and to freelance work. LinkedIn is the quickest.</p>
+  <table class="grid" style="max-width:560px"><thead><tr><th><span class="k">PK</span> channel</th><th>url</th></tr></thead><tbody>
+    <tr><td>LinkedIn</td><td><a href="https://www.linkedin.com/in/palmaluv/">linkedin.com/in/palmaluv</a></td></tr>
+    <tr><td>GitHub</td><td><a href="https://github.com/PalmaLuv">github.com/PalmaLuv</a></td></tr>
+    <tr><td>LeetCode</td><td><a href="https://leetcode.com/u/mrkyt875/">leetcode.com/u/mrkyt875</a></td></tr>
+  </tbody></table>
+</div></section>
+</main>
+<footer class="footer"><div class="page"><p>Alexander Kolyasa, 2026</p><p><a href="https://github.com/PalmaLuv/palma.github.io">Source on GitHub</a></p></div></footer>
+</body>
+</html>

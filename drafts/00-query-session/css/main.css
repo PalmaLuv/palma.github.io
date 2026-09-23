@@ -1,0 +1,194 @@
+/* PalmaLuv — portfolio
+   Idea: the page reads like a query session in SQL Server Management Studio.
+   Every section is a result set; rules mark real table rows, nothing else. */
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+:root {
+  --paper:        #EEF0F3;
+  --paper-2:      #E3E6EB;
+  --ink:          #15181C;
+  --ink-2:        #555D68;
+  --ink-3:        #858D98;
+  --rule:         #C5CBD3;
+  --rule-strong:  #15181C;
+  --sql:          #C0272D;
+  --sql-soft:     #F6DDDE;
+  --net:          #512BD4;
+  --net-soft:     #E3DCF8;
+  --ok:           #1C7C3E;
+  --ok-soft:      #D8EFDF;
+
+  --sans: 'IBM Plex Sans', system-ui, sans-serif;
+  --cond: 'IBM Plex Sans Condensed', 'IBM Plex Sans', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', ui-monospace, Consolas, monospace;
+
+  --measure: 62ch;
+  --page: 1080px;
+  --gutter: clamp(16px, 4vw, 48px);
+
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  --paper:        #1C2128;
+  --paper-2:      #262C35;
+  --ink:          #E6EAEF;
+  --ink-2:        #A3ADB8;
+  --ink-3:        #6E7883;
+  --rule:         #3A424C;
+  --rule-strong:  #E6EAEF;
+  --sql:          #F26B6A;
+  --sql-soft:     #4A2426;
+  --net:          #A891FF;
+  --net-soft:     #302858;
+  --ok:           #5BCB7A;
+  --ok-soft:      #1F3A28;
+  color-scheme: dark;
+}
+
+/* ---------- base ---------- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  font-family: var(--sans);
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--paper);
+  font-variant-numeric: tabular-nums;
+}
+a { color: inherit; text-decoration: underline; text-decoration-color: var(--rule); text-underline-offset: .18em; }
+a:hover { text-decoration-color: currentColor; }
+:focus-visible { outline: 2px solid var(--net); outline-offset: 3px; border-radius: 2px; }
+ul { list-style: none; }
+img { display: block; max-width: 100%; }
+
+.page { width: min(100% - 2 * var(--gutter), var(--page)); margin-inline: auto; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ---------- nav ---------- */
+.nav { border-bottom: 1px solid var(--rule); }
+.nav .page { display: flex; align-items: center; gap: 24px; min-height: 60px; }
+.brand { font-weight: 600; text-decoration: none; letter-spacing: -.01em; }
+.brand span { color: var(--ink-3); font-weight: 400; }
+.nav-links { display: flex; gap: 22px; margin-left: auto; font-size: 15px; }
+.nav-links a { text-decoration: none; color: var(--ink-2); }
+.nav-links a:hover { color: var(--ink); }
+.theme {
+  font: inherit; font-size: 14px; color: var(--ink-2);
+  background: none; border: 1px solid var(--rule); border-radius: 4px;
+  padding: 5px 10px; cursor: pointer;
+}
+.theme:hover { color: var(--ink); border-color: var(--ink-3); }
+
+/* ---------- hero: the query and its result ---------- */
+.hero { padding-block: clamp(48px, 8vw, 96px) clamp(40px, 6vw, 72px); }
+.hero h1 {
+  font-family: var(--cond); font-weight: 600;
+  font-size: clamp(3rem, 8.5vw, 6.25rem);
+  line-height: .95; letter-spacing: -.015em;
+  margin-bottom: .2em;
+}
+.hero .aka { color: var(--ink-2); margin-bottom: clamp(28px, 4vw, 48px); }
+.hero .aka b { font-weight: 500; color: var(--ink); }
+
+.query {
+  font-family: var(--mono); font-size: 15px; line-height: 1.7;
+  color: var(--ink-2); white-space: pre; overflow-x: auto;
+  margin-bottom: 18px;
+}
+.query .kw { color: var(--net); font-weight: 500; }
+.query .str { color: var(--sql); }
+
+.affected { font-family: var(--mono); font-size: 13px; color: var(--ink-3); margin-top: 10px; }
+
+.intro { max-width: var(--measure); margin-top: clamp(32px, 5vw, 56px); }
+.intro p + p { margin-top: .9em; }
+.links { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: 22px; font-size: 15px; }
+
+/* the one moment: the result set arrives after the query is "run" */
+@media (prefers-reduced-motion: no-preference) {
+  .js .result-wrap, .js .affected { opacity: 0; animation: arrive .45s ease-out forwards; }
+  .js .result-wrap { animation-delay: .35s; }
+  .js .affected { animation-delay: .7s; }
+  @keyframes arrive { to { opacity: 1; } }
+}
+
+/* ---------- sections ---------- */
+.section { padding-block: clamp(36px, 5vw, 64px); border-top: 1px solid var(--rule); }
+.section h2 {
+  font-family: var(--cond); font-weight: 600;
+  font-size: clamp(1.75rem, 3.4vw, 2.4rem); line-height: 1.1; letter-spacing: -.01em;
+  margin-bottom: 6px;
+}
+.section .lede { color: var(--ink-2); max-width: var(--measure); margin-bottom: 22px; }
+
+/* ---------- result grids ---------- */
+.grid { width: 100%; border-collapse: collapse; font-size: 15px; line-height: 1.5; }
+.grid th, .grid td { text-align: left; vertical-align: top; padding: 11px 18px 11px 0; }
+.grid th { font-weight: 500; color: var(--ink-2); border-bottom: 2px solid var(--rule-strong); white-space: nowrap; }
+.grid td { border-bottom: 1px solid var(--rule); }
+.grid td:last-child, .grid th:last-child { padding-right: 0; }
+.grid .num { text-align: right; white-space: nowrap; }
+.grid .k { font-weight: 500; white-space: nowrap; }
+.grid .muted { color: var(--ink-2); }
+.grid .sub { display: block; color: var(--ink-2); font-size: 14px; }
+.grid a.row-link { text-decoration: none; font-weight: 500; }
+.grid a.row-link:hover { text-decoration: underline; }
+
+.result th, .result td { font-size: 16px; }
+
+.status {
+  display: inline-block; padding: 1px 8px; border-radius: 3px;
+  background: var(--ok-soft); color: var(--ok); font-weight: 500; font-size: 14px;
+}
+
+/* chips: red is SQL, purple is .NET, plain is everything else */
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip {
+  display: inline-block; padding: 2px 9px; border-radius: 3px;
+  border: 1px solid var(--rule); font-size: 14px; line-height: 1.45; color: var(--ink);
+}
+.chip.sql { background: var(--sql-soft); border-color: transparent; color: var(--sql); }
+.chip.net { background: var(--net-soft); border-color: transparent; color: var(--net); }
+.legend { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; font-size: 14px; color: var(--ink-2); margin-bottom: 18px; }
+.legend .chip { font-size: 13px; }
+
+.two-up { display: grid; grid-template-columns: 1fr 1fr; gap: 20px clamp(24px, 5vw, 64px); }
+.two-up h3 { font-size: 15px; font-weight: 500; color: var(--ink-2); margin-bottom: 4px; }
+
+/* ---------- contact + footer ---------- */
+.contact-list { max-width: 560px; }
+.contact-list li { display: grid; grid-template-columns: 110px 1fr; gap: 16px; padding: 11px 0; border-bottom: 1px solid var(--rule); font-size: 15px; }
+.contact-list li:first-child { border-top: 2px solid var(--rule-strong); }
+.contact-list span { color: var(--ink-2); }
+
+.footer { border-top: 1px solid var(--rule); padding-block: 22px 40px; font-size: 14px; color: var(--ink-2); }
+.footer .page { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; }
+
+/* ---------- small screens: result sets become stacked records ---------- */
+@media (max-width: 720px) {
+  .nav-links { gap: 16px; font-size: 14px; }
+  .two-up { grid-template-columns: 1fr; }
+  .contact-list li { grid-template-columns: 90px 1fr; }
+
+  .grid.stack thead { display: none; }
+  .grid.stack, .grid.stack tbody, .grid.stack tr { display: block; }
+  .grid.stack tr { padding: 12px 0; border-bottom: 1px solid var(--rule); }
+  .grid.stack tr:first-child { border-top: 2px solid var(--rule-strong); }
+  .grid.stack td {
+    display: grid; grid-template-columns: 96px 1fr; gap: 12px;
+    padding: 3px 0; border: 0; white-space: normal;
+  }
+  .grid.stack td::before { content: attr(data-label); color: var(--ink-3); font-size: 13px; padding-top: 2px; }
+  .grid.stack td.num { text-align: left; }
+  .grid.stack .k { white-space: normal; }
+  .grid.stack .sub { display: inline; font-size: inherit; }
+  .grid.stack .sub::before { content: ', '; }
+}
+@media (max-width: 480px) {
+  .nav .page { flex-wrap: wrap; row-gap: 6px; padding-block: 10px; }
+  .theme { margin-left: auto; }
+  .nav-links { width: 100%; order: 3; margin-left: 0; }
+}
