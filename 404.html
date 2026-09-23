@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 — snake</title>
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* self-contained: a 404 is served from any path, so no relative assets */
+    :root { --bg:#0C0C0E; --text:#F4F2EE; --text2:rgba(244,242,238,.65); --text3:rgba(244,242,238,.4); --brd:rgba(255,255,255,.1); --card:rgba(255,255,255,.05); --brand:#E25544; --green:#18C362; --grid:rgba(255,255,255,.04); }
+    [data-theme="light"] { --bg:#F2F3F7; --text:#1B1E26; --text2:#4A5163; --text3:#8A91A3; --brd:rgba(20,24,40,.12); --card:rgba(255,255,255,.8); --grid:rgba(20,24,40,.05); }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { min-height: 100vh; display: grid; place-items: center; background: var(--bg); color: var(--text); font-family: 'Manrope', system-ui, sans-serif; padding: 24px; }
+    .wrap { width: min(100%, 560px); text-align: center; }
+    .code { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--text3); }
+    h1 { font-size: clamp(2rem, 7vw, 3.4rem); font-weight: 800; letter-spacing: -.035em; line-height: 1; margin: 8px 0 10px; text-transform: uppercase; }
+    p { color: var(--text2); max-width: 44ch; margin: 0 auto; }
+    p + p { margin-top: 4px; font-size: 14px; }
+    .board { position: relative; margin: 22px auto 14px; width: min(100%, 420px); aspect-ratio: 1; border-radius: 22px; background: var(--card); border: 1px solid var(--brd); box-shadow: rgba(255,255,255,.08) 1px 1px 0 0 inset, 0 30px 60px rgba(0,0,0,.35); overflow: hidden; }
+    canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+    .overlay { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(0,0,0,.35); backdrop-filter: blur(6px); }
+    .overlay.hidden { display: none; }
+    .overlay button { font: inherit; font-weight: 700; padding: 12px 22px; border-radius: 999px; border: 0; cursor: pointer; background: linear-gradient(135deg,#FF6B47,#FFB347); color: #fff; box-shadow: 0 10px 30px rgba(226,85,68,.4); }
+    .row { display: flex; justify-content: space-between; align-items: center; gap: 12px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--text2); }
+    .row b { color: var(--text); font-weight: 500; }
+    .home { display: inline-flex; align-items: center; gap: 8px; margin-top: 18px; padding: 8px 8px 8px 18px; border-radius: 999px; border: 1px solid var(--brd); background: var(--card); color: var(--text); text-decoration: none; font-weight: 700; font-size: 14px; }
+    .home .dot { width: 30px; height: 30px; border-radius: 50%; background: var(--text); color: var(--bg); display: grid; place-items: center; }
+    .home svg { width: 13px; height: 13px; }
+    .pad { display: none; grid-template-columns: repeat(3, 48px); gap: 6px; justify-content: center; margin-top: 12px; }
+    .pad button { font: inherit; height: 44px; border-radius: 12px; border: 1px solid var(--brd); background: var(--card); color: var(--text); font-size: 18px; }
+    .pad button:nth-child(1), .pad button:nth-child(3) { visibility: hidden; }
+    @media (pointer: coarse) { .pad { display: grid; } }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="code">HTTP 404 · SELECT * FROM pages WHERE url = @this → 0 rows</div>
+  <h1>No such page.<br>Have a snake.</h1>
+  <p>The one from the C++ repository, in JavaScript. Arrows or WASD to steer, Space to pause.</p>
+  <p lang="uk">Такої сторінки немає. Зате є змійка: стрілки або WASD, пробіл — пауза.</p>
+
+  <div class="board">
+    <canvas id="c" width="420" height="420" aria-label="Snake"></canvas>
+    <div class="overlay" id="ov"><button id="start" type="button">Play</button></div>
+  </div>
+  <div class="row"><span>score <b id="score">0</b></span><span>best <b id="best">0</b></span><span id="msg"></span></div>
+  <div class="pad" aria-hidden="true"><button></button><button data-d="0,-1">↑</button><button></button><button data-d="-1,0">←</button><button data-d="0,1">↓</button><button data-d="1,0">→</button></div>
+
+  <a class="home" href="/palma.github.io/" id="home">Back to the site<span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></span></a>
+</div>
+
+<script>
+(function () {
+  try { var t = localStorage.getItem('theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+  // the home link points at the site root whatever the host is
+  var home = document.getElementById('home');
+  var seg = location.pathname.split('/')[1];
+  home.href = location.hostname.endsWith('github.io') && seg && seg.indexOf('.') === -1 && seg !== 'uk' ? '/' + seg + '/' : '/';
+
+  var N = 21, cv = document.getElementById('c'), ctx = cv.getContext('2d');
+  var cell = cv.width / N, snake, dir, next, food, score, best = 0, timer, alive = false, paused = false;
+  try { best = +localStorage.getItem('snake-best') || 0; } catch (e) {}
+  document.getElementById('best').textContent = best;
+
+  function css(v) { return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
+  function reset() {
+    snake = [{ x: 10, y: 10 }, { x: 9, y: 10 }, { x: 8, y: 10 }]; dir = { x: 1, y: 0 }; next = dir; score = 0; place(); alive = true; paused = false;
+    document.getElementById('score').textContent = 0; document.getElementById('msg').textContent = '';
+    clearInterval(timer); timer = setInterval(step, 120);
+  }
+  function place() {
+    do { food = { x: Math.floor(Math.random() * N), y: Math.floor(Math.random() * N) }; }
+    while (snake.some(function (s) { return s.x === food.x && s.y === food.y; }));
+  }
+  function step() {
+    if (!alive || paused) return;
+    dir = next;
+    var h = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
+    if (h.x < 0 || h.y < 0 || h.x >= N || h.y >= N || snake.some(function (s) { return s.x === h.x && s.y === h.y; })) return over();
+    snake.unshift(h);
+    if (h.x === food.x && h.y === food.y) {
+      score++; document.getElementById('score').textContent = score; place();
+      if (score % 5 === 0) { clearInterval(timer); timer = setInterval(step, Math.max(60, 120 - score * 4)); }
+    } else snake.pop();
+    draw();
+  }
+  function over() {
+    alive = false; clearInterval(timer);
+    if (score > best) { best = score; try { localStorage.setItem('snake-best', best); } catch (e) {} document.getElementById('best').textContent = best; }
+    document.getElementById('msg').textContent = 'game over';
+    document.getElementById('start').textContent = 'Again';
+    document.getElementById('ov').classList.remove('hidden');
+  }
+  function draw() {
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    ctx.strokeStyle = css('--grid'); ctx.lineWidth = 1;
+    for (var i = 1; i < N; i++) { ctx.beginPath(); ctx.moveTo(i * cell, 0); ctx.lineTo(i * cell, cv.height); ctx.stroke(); ctx.beginPath(); ctx.moveTo(0, i * cell); ctx.lineTo(cv.width, i * cell); ctx.stroke(); }
+    ctx.fillStyle = css('--brand'); rr(food.x, food.y, 6);
+    snake.forEach(function (s, i) { ctx.fillStyle = i === 0 ? css('--text') : css('--green'); rr(s.x, s.y, 5); });
+  }
+  function rr(x, y, r) {
+    var p = 2, X = x * cell + p, Y = y * cell + p, W = cell - p * 2;
+    ctx.beginPath(); ctx.moveTo(X + r, Y); ctx.arcTo(X + W, Y, X + W, Y + W, r); ctx.arcTo(X + W, Y + W, X, Y + W, r); ctx.arcTo(X, Y + W, X, Y, r); ctx.arcTo(X, Y, X + W, Y, r); ctx.fill();
+  }
+  function turn(x, y) { if (!alive) return; if (x === -dir.x && y === -dir.y) return; next = { x: x, y: y }; }
+  document.addEventListener('keydown', function (e) {
+    var k = e.key.toLowerCase();
+    if (['arrowup', 'arrowdown', 'arrowleft', 'arrowright', ' '].indexOf(e.key.toLowerCase()) > -1) e.preventDefault();
+    if (k === 'arrowup' || k === 'w') turn(0, -1); else if (k === 'arrowdown' || k === 's') turn(0, 1);
+    else if (k === 'arrowleft' || k === 'a') turn(-1, 0); else if (k === 'arrowright' || k === 'd') turn(1, 0);
+    else if (k === ' ') { if (!alive) start(); else { paused = !paused; document.getElementById('msg').textContent = paused ? 'paused' : ''; } }
+  });
+  document.querySelectorAll('.pad [data-d]').forEach(function (b) { b.addEventListener('click', function () { var d = b.dataset.d.split(','); turn(+d[0], +d[1]); }); });
+  var sx, sy;
+  cv.addEventListener('pointerdown', function (e) { sx = e.clientX; sy = e.clientY; });
+  cv.addEventListener('pointerup', function (e) {
+    if (sx == null) return; var dx = e.clientX - sx, dy = e.clientY - sy; sx = null;
+    if (Math.abs(dx) < 12 && Math.abs(dy) < 12) return;
+    Math.abs(dx) > Math.abs(dy) ? turn(dx > 0 ? 1 : -1, 0) : turn(0, dy > 0 ? 1 : -1);
+  });
+  function start() { document.getElementById('ov').classList.add('hidden'); reset(); draw(); }
+  document.getElementById('start').addEventListener('click', start);
+  snake = [{ x: 10, y: 10 }, { x: 9, y: 10 }, { x: 8, y: 10 }]; food = { x: 15, y: 10 }; draw();
+})();
+</script>
+</body>
+</html>
